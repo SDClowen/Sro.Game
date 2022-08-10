@@ -56,9 +56,9 @@ namespace Silkroad
             terrain = new(this);
             mapRegion = new(graphics.GraphicsDevice, this);
             m_camera = new(this);
-            Components.Add(m_camera);
-            Components.Add(mapRegion);
             Components.Add(terrain);
+            Components.Add(mapRegion);
+            Components.Add(m_camera);
 
             m_stats = new Statistics(this, Content);
             Components.Add(m_stats);

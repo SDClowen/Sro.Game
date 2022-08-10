@@ -37,9 +37,9 @@ namespace Silkroad.Materials
                 int test6 = reader.ReadInt32();
                 int test7 = reader.ReadInt32();
                 int test8 = reader.ReadInt32();
-                int test9 = reader.ReadInt32();
+                var pointerBoundingBox = reader.ReadInt32();
                 int test10 = reader.ReadInt32();
-                int test11 = reader.ReadInt32();
+                var pointerHitbox = reader.ReadInt32();
                 int test12 = reader.ReadInt32();
                 int test13 = reader.ReadInt32();
                 int lightmapResolution = reader.ReadInt32();

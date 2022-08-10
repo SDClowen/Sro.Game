@@ -24,11 +24,16 @@ namespace Silkroad
         }
         public bool LoadTerrain()
         {
-            var file = Path.Combine("navmesh", $"nv_{YSector:X}{XSector:X}.nvm");
-
-            var nvm = new nvm(Program.Data.GetFileBuffer(file));
-            vertices = nvm.GetVertices();
-            indicies = nvm.GetIndicies();
+            try
+            {
+                var nvm = new nvm(Path.Combine("navmesh", $"nv_{YSector:X}{XSector:X}.nvm"));
+                vertices = nvm.Vertices;
+                indicies = nvm.Indicies;
+            }
+            catch (System.Exception)
+            {
+                return false;
+            }
             return true;
         }
 

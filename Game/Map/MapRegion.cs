@@ -23,10 +23,8 @@ namespace Silkroad
             this.m_game = game;
             this.device = device;
             LoadTerrain();
-            //LoadTextures();
             effect = new BasicEffect(device);
             lastkeyboardState = Keyboard.GetState();
-            //Translated from pushedx aka Drew_Benton's edxLabs nvm.cpp
         }
 
         public override void Update(GameTime gameTime)
@@ -70,7 +68,7 @@ namespace Silkroad
         private void LoadTerrain()
         {
             mapObjects = new List<MapObject>();
-            navMesh = new nvm(Program.Data.GetFileBuffer(Path.Combine("navmesh", $"nv_{ysec:X}{xsec:X}.nvm")));
+            navMesh = new nvm(Path.Combine("navmesh", $"nv_{ysec:X}{xsec:X}.nvm"));
             ObjectFile ofile = new ObjectFile(Program.Map.GetFileBuffer(string.Format(@"{0}\{1}.o2", ysec, xsec)));
             foreach (mObject obj in ofile.objects)
             {

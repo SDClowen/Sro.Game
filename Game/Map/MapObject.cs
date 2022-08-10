@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Silkroad.Lib;
@@ -25,7 +26,6 @@ namespace Silkroad
         public List<bms> meshes;
         public List<BmtManager> textures;
         private List<objMeshes> meshWithTextures;
-        private Vector3 game_position;
         private Vector3 position;
         private Texture2D blankTex;
         private mObject obj;
@@ -39,8 +39,7 @@ namespace Silkroad
             meshWithTextures = new List<objMeshes>();
 
             this.obj = obj;
-            this.game_position = new Vector3(obj.x, obj.y, obj.z);
-            this.position = FixPosition();
+            this.position = new Vector3(obj.x, obj.y, obj.z);
 
             string path = Program.Window.objectInfos.GetPathByID(obj.uID);
             resourceInfo = Bsr.ReadFromStream(Program.Data.GetFileBuffer(path));
@@ -61,12 +60,6 @@ namespace Silkroad
             {
                 meshWithTextures.Add(new objMeshes(b, GetTexture(b.material)));
             }
-        }
-
-        private Vector3 FixPosition()
-        {
-            Vector3 delta = new Vector3(1920f * (this.x_r - obj.xsec), 0, 1920f * (this.y_r - obj.ysec));
-            return (this.game_position);
         }
 
         public Texture2D GetTexture(string meshPartName)
@@ -94,14 +87,17 @@ namespace Silkroad
         {
             foreach (objMeshes m in meshWithTextures)
             {
-                Program.Window.effect.World = Matrix.CreateRotationY(MathHelper.ToRadians(this.obj.angle * (180.0f / (float)MathHelper.Pi))) * Matrix.CreateTranslation(this.position);
+                Program.Window.effect.World = Matrix.CreateRotationY(MathHelper.ToRadians(this.obj.angle * (180.0f / MathF.PI))) * Matrix.CreateTranslation(this.position);
                 Program.Window.effect.View = Program.Window.m_camera.View;
                 Program.Window.effect.Projection = Program.Window.m_camera.Projection;
-                Program.Window.effect.VertexColorEnabled = false;
+                //Program.Window.effect.VertexColorEnabled = true;
 
-                RasterizerState rasterizerState = new RasterizerState();
+                var rasterizerState = new RasterizerState();
                 rasterizerState.FillMode = FillMode.Solid;
-                rasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
+                rasterizerState.CullMode = CullMode.CullClockwiseFace;
+                rasterizerState.DepthClipEnable = true;
+                rasterizerState.MultiSampleAntiAlias = true;
+
                 Program.Window.GraphicsDevice.RasterizerState = rasterizerState;
 
                 Program.Window.effect.CurrentTechnique.Passes[0].Apply();

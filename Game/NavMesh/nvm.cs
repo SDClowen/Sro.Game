@@ -1,6 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using System;
 using System.IO;
+using System.Security.Policy;
+using System.Text.RegularExpressions;
 
 namespace Silkroad
 {
@@ -13,12 +17,27 @@ namespace Silkroad
         public tNVMEntity[] entities;
         private float[] hightmap;
 
-        public nvm(byte[] file)
+        public string Name;
+        public int OffsetPosX;
+        public int OffsetPosY;
+        public nvm(string file)
         {
-            BinaryReader reader = new BinaryReader(new MemoryStream(file));
+            BinaryReader reader = new BinaryReader(new MemoryStream(Program.Data.GetFileBuffer(file)));
             ParseNVM(reader);
             reader.Dispose();
             reader.Close();
+
+
+            var match = Regex.Match(file, "([0-9a-zA-Z]{2})([0-9a-zA-Z]{2}).nvm$");
+            if (!match.Success)
+            {
+                MessageBox.Show("", "Error: Region offset cannot be extracted from filename, the terrain won't be extracted [" + file + "]", null);
+                return;
+            }
+
+            Name = file;
+            OffsetPosY = int.Parse(match.Groups[1].Value, System.Globalization.NumberStyles.HexNumber);
+            OffsetPosX = int.Parse(match.Groups[2].Value, System.Globalization.NumberStyles.HexNumber);
         }
 
         public float GetHightAt(int x, int y)
@@ -30,44 +49,50 @@ namespace Silkroad
         {
             return textureMap[y, x].w4;
         }
-        public VertexPositionColor[] GetVertices()
-        {
-            var vertices = new VertexPositionColor[97 * 97];
-            for (int x = 0; x < 97; x++)
-            {
-                for (int y = 0; y < 97; y++)
-                {
-                    vertices[x + y * 97].Position = new Vector3(x * 20, GetHightAt(x, y), y * 20);
-                    vertices[x + y * 97].Color = Color.Gray;
 
+        public VertexPositionColor[] Vertices
+        {
+            get
+            {
+                var vertices = new VertexPositionColor[97 * 97];
+                for (int x = 0; x < 97; x++)
+                {
+                    for (int y = 0; y < 97; y++)
+                    {
+                        vertices[x + y * 97].Position = new Vector3(x * 20, GetHightAt(x, y), y * 20);
+                        vertices[x + y * 97].Color = Color.Gray;
+
+                    }
                 }
+                return vertices;
             }
-            return vertices;
         }
-
-        public int[] GetIndicies()
+        public int[] Indicies
         {
-            int[] indices = new int[96 * 96 * 6];
-            int counter = 0;
-            for (int y = 0; y < 96; y++)
+            get
             {
-                for (int x = 0; x < 96; x++)
+                int[] indices = new int[96 * 96 * 6];
+                int counter = 0;
+                for (int y = 0; y < 96; y++)
                 {
-                    int lowerLeft = x + y * 97;
-                    int lowerRight = (x + 1) + y * 97;
-                    int topLeft = x + (y + 1) * 97;
-                    int topRight = (x + 1) + (y + 1) * 97;
+                    for (int x = 0; x < 96; x++)
+                    {
+                        int lowerLeft = x + y * 97;
+                        int lowerRight = (x + 1) + y * 97;
+                        int topLeft = x + (y + 1) * 97;
+                        int topRight = (x + 1) + (y + 1) * 97;
 
-                    indices[counter++] = topLeft;
-                    indices[counter++] = lowerRight;
-                    indices[counter++] = lowerLeft;
+                        indices[counter++] = topLeft;
+                        indices[counter++] = lowerRight;
+                        indices[counter++] = lowerLeft;
 
-                    indices[counter++] = topLeft;
-                    indices[counter++] = topRight;
-                    indices[counter++] = lowerRight;
+                        indices[counter++] = topLeft;
+                        indices[counter++] = topRight;
+                        indices[counter++] = lowerRight;
+                    }
                 }
+                return indices;
             }
-            return indices;
         }
 
         private void ParseNVM(BinaryReader reader)
@@ -172,6 +197,7 @@ namespace Silkroad
                     textureMap[x, y].w4 = reader.ReadUInt16();
                 }
             }
+
             hightmap = new float[9409];
             for (int x = 0; x < 9409; x++)
             {
