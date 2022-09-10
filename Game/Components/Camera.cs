@@ -21,7 +21,8 @@ namespace Silkroad.Components
         protected const float m_nearPlaneDistance = 1f;
         protected const float m_farPlaneDistance = 10000f;
 
-        protected const float m_speed = 8.25f;
+        protected const float m_speed = 12.25f;
+        protected const float m_wheelSpeed = 50f;
         protected const float m_mouseSpeedX = 0.0045f;
         protected const float m_mouseSpeedY = 0.0025f;
 
@@ -29,7 +30,8 @@ namespace Silkroad.Components
         protected int m_windowHeight;
         protected float m_aspectRatio;
         protected MouseState m_prevMouse;
-
+        private bool moving = false;
+        private int lastWheelValue = 0;
 
         /// <summary>
         /// Creates the instance of the camera.
@@ -110,6 +112,26 @@ namespace Silkroad.Components
             if (keyboard.IsKeyDown(Keys.LeftControl) || keyboard.IsKeyDown(Keys.X))
                 m_position -= m_up * m_speed;
 
+            if (mouse.ScrollWheelValue != lastWheelValue)
+            {
+                if(mouse.ScrollWheelValue > lastWheelValue)
+                    m_position += m_direction * m_wheelSpeed;
+                else
+                    m_position -= m_direction * m_wheelSpeed;
+
+                lastWheelValue = mouse.ScrollWheelValue;
+            }
+
+            if (mouse.RightButton != ButtonState.Pressed)
+            {
+                moving = false;
+                return;
+            }
+            else if(!moving)
+            {
+                moving = true;
+                m_prevMouse = mouse;
+            }
 
             if (mouse != m_prevMouse)
             {
@@ -126,7 +148,7 @@ namespace Silkroad.Components
                 // m_up = Vector3.Transform(m_up, m_rotation);
 
                 // Reset the position of the cursor to the center
-                Mouse.SetPosition(m_windowWidth / 2, m_windowHeight / 2);
+                //Mouse.SetPosition(m_windowWidth / 2, m_windowHeight / 2);
                 m_prevMouse = Mouse.GetState();
             }
 

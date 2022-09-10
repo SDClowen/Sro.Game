@@ -1,8 +1,6 @@
-﻿using Silkroad.Lib;
-using System;
+﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Threading;
 
 namespace Silkroad
 {
@@ -27,7 +25,6 @@ namespace Silkroad
         {
 #if DEBUG
             AllocConsole();
-            Console.WriteLine("SME is in debug mode!");
 #endif
 
             Data = new Pk2.Archive(Path.Combine(MainGame.Path, "Data.pk2"));

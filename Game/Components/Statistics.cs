@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Silkroad.Components
 {
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class Statistics : Microsoft.Xna.Framework.DrawableGameComponent
+    public class Statistics : DrawableGameComponent
     {
         protected Dictionary<string, string> m_statistics;
         protected ContentManager m_content;
@@ -50,7 +51,7 @@ namespace Silkroad.Components
         protected override void LoadContent()
         {
             m_spriteBatch = new SpriteBatch(GraphicsDevice);
-            m_font = m_content.Load<SpriteFont>(@"Fonts\Statistics");
+            m_font = m_content.Load<SpriteFont>(@"Statistics");
 
             base.LoadContent();
         }
@@ -83,6 +84,7 @@ namespace Silkroad.Components
                 m_statistics["FPS"] = m_frameRate.ToString();
                 m_statistics["Memory"] = (GC.GetTotalMemory(false) / 1024f / 1024f).ToString();
                 m_statistics["Region"] = $"{Terrain.XSector}x{Terrain.YSector}";
+                m_statistics["Mouse"] = $"X:{Mouse.GetState().X} Y:{Mouse.GetState().Y}";
             }
 
             base.Update(gameTime);

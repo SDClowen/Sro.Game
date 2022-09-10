@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 
 namespace Silkroad.Pk2
@@ -52,6 +51,8 @@ namespace Silkroad.Pk2
         {
             var n = Path.GetDirectoryName(path);
             var folder = GetFolder(n);
+            if (folder == null)
+                return null;
 
             if (!folder.IsPopulated)
                 Seek(folder.Entry.Position).Read(folder);

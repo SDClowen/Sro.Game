@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SharpDX.Direct3D9;
 using Silkroad.Components;
 using Silkroad.Materials;
 using System;
@@ -14,25 +15,26 @@ namespace Silkroad
     public class MainGame : Game
     {
         GraphicsDeviceManager graphics;
-        public Camera m_camera;
-        Statistics m_stats;
-        Skydome m_dome;
-
-        Terrain terrain;
-        MapRegion mapRegion;
+        public Camera Camera;
+        Statistics _stats;
+        Texture2D _cursor;
+        Terrain _terrain;
+        MapRegion _mapRegion;
 
         VertexPositionColor[] vertcies = new VertexPositionColor[8];
-        public static string Path = @"D:\Silkroad\Clients\Official\SilkroadOnline_GlobalOfficial_v1_225";
-        public BasicEffect effect;
+        public static string Path = @"D:\Silkroad\Clients\Official\SilkroadOnline_GlobalOfficial_v1_281";
+        public BasicEffect basicEffect;
         public objifo objectInfos;
+        protected SpriteBatch _spriteBatch;
 
         public MainGame()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             Window.AllowUserResizing = true;
-            Window.Title = "Test Game";
-
+            Window.Title = "Silkroad World Editör";
+            graphics.HardwareModeSwitch = true;
+            graphics.PreferMultiSampling = true;
             graphics.PreferredBackBufferWidth = 1440;
             graphics.PreferredBackBufferWidth = 900;
             graphics.PreferMultiSampling = true;
@@ -48,41 +50,28 @@ namespace Silkroad
         /// </summary>
         protected override void Initialize()
         {
+            IsMouseVisible = true;
             objectInfos = new objifo();
             objectInfos.Load();
 
-            effect = new(this.GraphicsDevice);
+            basicEffect = new(this.GraphicsDevice);
+
             // TODO: Add your initialization logic here
-            terrain = new(this);
-            mapRegion = new(graphics.GraphicsDevice, this);
-            m_camera = new(this);
-            Components.Add(terrain);
-            Components.Add(mapRegion);
-            Components.Add(m_camera);
+            _terrain = new(this);
+            _mapRegion = new(this);
+            Camera = new(this);
 
-            m_stats = new Statistics(this, Content);
-            Components.Add(m_stats);
+            Components.Add(_terrain);
+            Components.Add(_mapRegion);
+            Components.Add(Camera);
 
-            m_dome = new Skydome(this, Content);
-            Components.Add(m_dome);
+            _stats = new Statistics(this, Content);
+            Components.Add(_stats);
 
-            InitOutline();
+            GraphicsDevice.BlendState = BlendState.AlphaBlend;
+            GraphicsDevice.DepthStencilState = DepthStencilState.DepthRead;
+
             base.Initialize();
-        }
-
-        private void InitOutline()
-        {
-            vertcies[0] = new VertexPositionColor(new Vector3(0, 0, 0), Color.Blue);
-            vertcies[1] = new VertexPositionColor(new Vector3(96 * 20, 0, 0), Color.Blue);
-
-            vertcies[2] = new VertexPositionColor(new Vector3(96 * 20, 0, 0), Color.Blue);
-            vertcies[3] = new VertexPositionColor(new Vector3(96 * 20, 0, 96 * 20), Color.Blue);
-
-            vertcies[4] = new VertexPositionColor(new Vector3(96 * 20, 0, 96 * 20), Color.Blue);
-            vertcies[5] = new VertexPositionColor(new Vector3(0, 0, 96 * 20), Color.Blue);
-
-            vertcies[6] = new VertexPositionColor(new Vector3(0, 0, 96 * 20), Color.Blue);
-            vertcies[7] = new VertexPositionColor(new Vector3(0, 0, 0), Color.Blue);
         }
 
         /// <summary>
@@ -91,8 +80,13 @@ namespace Silkroad
         /// </summary>
         protected override void LoadContent()
         {
-            effect = new BasicEffect(GraphicsDevice);
-            // TODO: use this.Content to load your game content here
+            basicEffect = new BasicEffect(GraphicsDevice);
+            _cursor = Content.Load<Texture2D>("cursor");
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            var test = MouseCursor.FromTexture2D(_cursor, 0, 0);
+            
+            Mouse.PlatformSetCursor(test);
         }
 
         /// <summary>
@@ -125,22 +119,7 @@ namespace Silkroad
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.CornflowerBlue, 1.0f, 0);
-
-            effect.View = m_camera.View;
-            effect.Projection = m_camera.Projection;
-            effect.World = Matrix.CreateWorld(Vector3.Zero, Vector3.Forward, Vector3.Up);
-            RasterizerState rs = new RasterizerState();
-            rs.CullMode = CullMode.None;
-            rs.FillMode = FillMode.Solid;
-            GraphicsDevice.RasterizerState = rs;
-            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-                //GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, vertcies, 0, 4);
-            }
-
-            // TODO: Add your drawing code here
+            GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.Black, 1.0f, 0);
 
             base.Draw(gameTime);
         }

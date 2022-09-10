@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Silkroad.Lib;
 using Silkroad.Materials;
+using System;
+using System.Collections.Generic;
 
 namespace Silkroad
 {
@@ -71,26 +70,26 @@ namespace Silkroad
                     if (meshPartName == texture.Name)
                     {
                         if(texture.IsNotWithinSameDirectory)
-                            return ddjLoader.GetTexture(Program.Data.GetFileBuffer(texture.DiffuseMap), Program.Window.GraphicsDevice);
+                            return DDS.GetTexture(Program.Data.GetFileBuffer(texture.DiffuseMap), Program.Window.GraphicsDevice);
                         
                         string path = bmtTexture.Path.Substring(0, bmtTexture.Path.LastIndexOf('\\') + 1);
                         path += texture.DiffuseMap;
                         
-                        return ddjLoader.GetTexture(Program.Data.GetFileBuffer(path), Program.Window.GraphicsDevice);
+                        return DDS.GetTexture(Program.Data.GetFileBuffer(path), Program.Window.GraphicsDevice);
                     }
                 }
             }
             return blankTex;
         }
 
-        public void Draw()
+        public void Draw(MainGame game, BasicEffect effect)
         {
             foreach (objMeshes m in meshWithTextures)
             {
-                Program.Window.effect.World = Matrix.CreateRotationY(MathHelper.ToRadians(this.obj.angle * (180.0f / MathF.PI))) * Matrix.CreateTranslation(this.position);
-                Program.Window.effect.View = Program.Window.m_camera.View;
-                Program.Window.effect.Projection = Program.Window.m_camera.Projection;
-                //Program.Window.effect.VertexColorEnabled = true;
+                effect.World = Matrix.CreateRotationY(MathHelper.ToRadians(this.obj.angle * (180.0f / MathF.PI))) * Matrix.CreateTranslation(this.position);
+                effect.View = game.Camera.View;
+                effect.Projection = game.Camera.Projection;
+                effect.VertexColorEnabled = false;
 
                 var rasterizerState = new RasterizerState();
                 rasterizerState.FillMode = FillMode.Solid;
@@ -98,20 +97,19 @@ namespace Silkroad
                 rasterizerState.DepthClipEnable = true;
                 rasterizerState.MultiSampleAntiAlias = true;
 
-                Program.Window.GraphicsDevice.RasterizerState = rasterizerState;
+                game.GraphicsDevice.RasterizerState = rasterizerState;
 
-                Program.Window.effect.CurrentTechnique.Passes[0].Apply();
-                Program.Window.effect.EnableDefaultLighting();
-                Program.Window.effect.Texture = m.texture;
-                Program.Window.effect.TextureEnabled = true;
+                effect.CurrentTechnique.Passes[0].Apply();
+                effect.EnableDefaultLighting();
+                effect.Texture = m.texture;
+                effect.TextureEnabled = true;
 
-                foreach (EffectPass pass in Program.Window.effect.CurrentTechnique.Passes)
+                foreach (EffectPass pass in effect.CurrentTechnique.Passes)
                 {
                     pass.Apply();
-
                     VertexPositionNormalTexture[] verts = m.verts.GetVerticies();
                     int[] indicies = m.verts.GetIndicies();
-                    Program.Window.GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList,
+                    game.GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList,
                         verts, 0, verts.Length, indicies, 0, indicies.Length / 3);
                 }
             }

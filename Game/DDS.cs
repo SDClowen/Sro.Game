@@ -2,19 +2,9 @@
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Silkroad.Lib
+namespace Silkroad
 {
-    public class ddjLoader
-    {
-        public static Texture2D GetTexture(byte[] file, GraphicsDevice device)
-        {
-            Texture2D tmpTex;
-            DDSLib.DDSFromStream(new MemoryStream(file), device, 20, false, out tmpTex);
-            return tmpTex;
-        }
-    }
-
-    public static class DDSLib
+    public static class DDS
     {
         private const int DDSD_CAPS = 0x1;                      //Required in every .dds file.
         private const int DDSD_HEIGHT = 0x2;                    //Required in every .dds file.
@@ -100,6 +90,13 @@ namespace Silkroad.Lib
             //This is set only by the nvidia exporter, it is not set by the dx texture tool
             //,it is ignored by the dx texture tool but it returns the ability to be opened in photoshop so I decided to keep it.
             D3DFMT_Q8W8V8U8 = 63,
+        }
+
+        public static Texture2D GetTexture(byte[] file, GraphicsDevice device)
+        {
+            Texture2D tmpTex;
+            DDSFromStream(new MemoryStream(file), device, 20, false, out tmpTex);
+            return tmpTex;
         }
 
         // Indicates whether this texture is cube map.

@@ -3,23 +3,21 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.IO;
 
-namespace Silkroad
+namespace Silkroad.Components
 {
     internal class Terrain : DrawableGameComponent
     {
         public static int XSector = 168;
         public static int YSector = 97;
 
-        MainGame m_game;
         VertexPositionColor[] vertices;
         int[] indicies;
         BasicEffect effect;
         KeyboardState lastkeyboardState;
 
-        public Terrain(MainGame game) : base(game)
+        public Terrain(Game game) : base(game)
         {
             effect = new BasicEffect(game.GraphicsDevice);
-            this.m_game = game;
             LoadTerrain();
         }
         public bool LoadTerrain()
@@ -67,7 +65,7 @@ namespace Silkroad
 
         public override void Draw(GameTime gameTime)
         {
-            RasterizerState rs = new RasterizerState();
+            var rs = new RasterizerState();
             rs.CullMode = CullMode.CullClockwiseFace;
             rs.FillMode = FillMode.WireFrame;
             GraphicsDevice.RasterizerState = rs;
@@ -77,8 +75,8 @@ namespace Silkroad
             d.DepthBufferEnable = true;
             GraphicsDevice.DepthStencilState = d;
 
-            effect.View = m_game.m_camera.View;
-            effect.Projection = m_game.m_camera.Projection;
+            effect.View = ((MainGame)Game).Camera.View;
+            effect.Projection = ((MainGame)Game).Camera.Projection;
             effect.World = Matrix.CreateWorld(Vector3.Zero, Vector3.Forward, Vector3.Up);
             effect.VertexColorEnabled = false;
             //effect.EnableDefaultLighting();

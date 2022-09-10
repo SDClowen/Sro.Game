@@ -22,7 +22,7 @@ namespace Silkroad.Materials
             while (!reader.EndOfStream)
             {
                 string line = reader.ReadLine();
-                objinfo info = new objinfo();
+                var info = new objinfo();
                 info.id = int.Parse(line.Substring(0, 5));
                 info.param = line.Substring(6, 10);
                 info.path = line.Substring(18, line.Length - 19);

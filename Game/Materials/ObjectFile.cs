@@ -20,10 +20,10 @@ namespace Silkroad.Materials
             reader.BaseStream.Position += 16; //skip header
             for (int i = 0; i < 142; i++)
             {
-                short c = reader.ReadInt16();
-                for (int x = 0; x < c; x++)
+                var count = reader.ReadInt16();
+                for (int x = 0; x < count; x++)
                 {
-                    mObject obj = new mObject();
+                    var obj = new mObject();
                     obj.group = 0;
                     obj.uID = reader.ReadInt32();
                     obj.x = reader.ReadSingle();
