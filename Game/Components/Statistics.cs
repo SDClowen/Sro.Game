@@ -21,6 +21,7 @@ namespace Silkroad.Components
         protected int m_frameRate = 0;
         protected int m_frameCounter = 0;
         protected TimeSpan m_elapsedTime = TimeSpan.Zero;
+        protected TimeSpan frameElapsed = TimeSpan.Zero;
 
 
         public Statistics(Game game, ContentManager content) : base(game)
@@ -40,6 +41,8 @@ namespace Silkroad.Components
             m_statistics["FPS"] = "0";
             m_statistics["Memory"] = "0";
             m_statistics["Region"] = "0";
+            m_statistics["Mouse"] = "0";
+            m_statistics["Camera"] = "0";
 
             base.Initialize();
         }
@@ -75,16 +78,24 @@ namespace Silkroad.Components
         public override void Update(GameTime gameTime)
         {
             m_elapsedTime += gameTime.ElapsedGameTime;
+            frameElapsed += gameTime.ElapsedGameTime;
 
-            if (m_elapsedTime > TimeSpan.FromSeconds(1))
+            if(frameElapsed > TimeSpan.FromSeconds(1))
             {
-                m_elapsedTime -= TimeSpan.FromSeconds(1);
+                frameElapsed -= TimeSpan.FromSeconds(1);
+
                 m_frameRate = m_frameCounter;
                 m_frameCounter = 0;
                 m_statistics["FPS"] = m_frameRate.ToString();
-                m_statistics["Memory"] = (GC.GetTotalMemory(false) / 1024f / 1024f).ToString();
+            }
+
+            if (m_elapsedTime > TimeSpan.FromMilliseconds(50))
+            {
+                m_elapsedTime -= TimeSpan.FromMilliseconds(50);
+                m_statistics["Memory"] = (GC.GetTotalMemory(false) / 1024f / 1024f).ToString("0.0");
                 m_statistics["Region"] = $"{Terrain.XSector}x{Terrain.YSector}";
-                m_statistics["Mouse"] = $"X:{Mouse.GetState().X} Y:{Mouse.GetState().Y}";
+                m_statistics["Mouse"] = $"X:{Mouse.GetState().X:0.0} Y:{Mouse.GetState().Y:0.0}";
+                m_statistics["Camera"] = $"X:{Camera.Position.X:0.0} Z:{Camera.Position.Z:0.0} Y:{Camera.Position.Y:0.0}";
             }
 
             base.Update(gameTime);
