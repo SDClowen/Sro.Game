@@ -37,6 +37,9 @@ namespace Silkroad.Components
 
         public override void Update(GameTime gameTime)
         {
+            if (!Game.IsActive)
+                return;
+
             KeyboardState state = Keyboard.GetState();
             if (state.IsKeyUp(Keys.Right) && lastkeyboardState.IsKeyDown(Keys.Right))
             {

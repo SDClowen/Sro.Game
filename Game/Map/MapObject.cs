@@ -86,7 +86,9 @@ namespace Silkroad
         {
             foreach (objMeshes m in meshWithTextures)
             {
-                effect.World = Matrix.CreateRotationY(MathHelper.ToRadians(this.obj.angle * (180.0f / MathF.PI))) * Matrix.CreateTranslation(this.position);
+                var anglePi = new SharpDX.AngleSingle(obj.angle, SharpDX.AngleType.Radian);
+                effect.World = Matrix.CreateRotationY(anglePi.Radians) * Matrix.CreateTranslation(this.position);
+
                 effect.View = game.Camera.View;
                 effect.Projection = game.Camera.Projection;
                 effect.VertexColorEnabled = false;
@@ -108,7 +110,7 @@ namespace Silkroad
                 {
                     pass.Apply();
                     VertexPositionNormalTexture[] verts = m.verts.GetVerticies();
-                    int[] indicies = m.verts.GetIndicies();
+                    var indicies = m.verts.GetIndicies();
                     game.GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList,
                         verts, 0, verts.Length, indicies, 0, indicies.Length / 3);
                 }

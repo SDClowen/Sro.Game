@@ -32,7 +32,8 @@ namespace Silkroad
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             Window.AllowUserResizing = true;
-            Window.Title = "Silkroad World Editör";
+            Window.Title = "Silkroad World Editor";
+            
             graphics.HardwareModeSwitch = true;
             graphics.PreferMultiSampling = true;
             graphics.PreferredBackBufferWidth = 1440;
@@ -84,9 +85,7 @@ namespace Silkroad
             _cursor = Content.Load<Texture2D>("cursor");
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            var test = MouseCursor.FromTexture2D(_cursor, 0, 0);
-            
-            Mouse.PlatformSetCursor(test);
+            Mouse.PlatformSetCursor(MouseCursor.FromTexture2D(_cursor, 0, 0));
         }
 
         /// <summary>

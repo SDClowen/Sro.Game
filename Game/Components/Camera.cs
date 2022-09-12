@@ -161,6 +161,9 @@ namespace Silkroad.Components
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
+            if (!Game.IsActive)
+                return;
+
             // Handle camera movement
             ProcessInput();
 

@@ -8,7 +8,7 @@ namespace Silkroad.Materials
     internal class bms
     {
         private Vector3[] verticies;
-        private Vector3[] normals;
+        private Vector3[] uv;
         private Vector2[] textures;
         public string mesh;
         public string material;
@@ -49,19 +49,19 @@ namespace Silkroad.Materials
                 int unk = reader.ReadInt32();
                 int vertCount = reader.ReadInt32();
                 verticies = new Vector3[vertCount];
-                normals = new Vector3[vertCount];
+                uv = new Vector3[vertCount];
                 textures = new Vector2[vertCount];
                 vert = new VertexPositionNormalTexture[vertCount];
                 for (int i = 0; i < vertCount; i++)
                 {
                     verticies[i] = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    normals[i] = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                    uv[i] = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     textures[i] = new Vector2(reader.ReadSingle(), reader.ReadSingle());
                     if (lightmapResolution > 0)
                     {
                         Vector2 unk12 = new Vector2(reader.ReadSingle(), reader.ReadSingle());
                     }
-                    vert[i] = new VertexPositionNormalTexture(verticies[i], normals[i], textures[i]);
+                    vert[i] = new VertexPositionNormalTexture(verticies[i], uv[i], textures[i]);
                     reader.BaseStream.Position += 12;
                 }
                 if (lightmapResolution > 0)

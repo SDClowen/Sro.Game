@@ -1,9 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 using System.IO;
-using System.Security.Policy;
 using System.Text.RegularExpressions;
 
 namespace Silkroad
