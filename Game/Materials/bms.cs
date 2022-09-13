@@ -100,7 +100,7 @@ namespace Silkroad.Materials
 
         public int[] GetIndicies()
         {
-            List<int> tmp = new List<int>();
+            List<int> tmp = new();
             if (faces != null)
             {
                 for (int i = 0; i < faces.Length / 3; i++)

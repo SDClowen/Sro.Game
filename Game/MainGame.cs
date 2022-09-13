@@ -21,7 +21,6 @@ namespace Silkroad
         Terrain _terrain;
         MapRegion _mapRegion;
 
-        VertexPositionColor[] vertcies = new VertexPositionColor[8];
         public static string Path = @"D:\Silkroad\Clients\Official\SilkroadOnline_GlobalOfficial_v1_281";
         public BasicEffect basicEffect;
         public objifo objectInfos;
@@ -33,13 +32,20 @@ namespace Silkroad
             Content.RootDirectory = "Content";
             Window.AllowUserResizing = true;
             Window.Title = "Silkroad World Editor";
-            
+
+            IntPtr ptr = this.Window.Handle;
+            System.Windows.Forms.Form form = (System.Windows.Forms.Form)System.Windows.Forms.Control.FromHandle(ptr);
+            form.Size = new System.Drawing.Size(1440, 900);
+
             graphics.HardwareModeSwitch = true;
-            graphics.PreferMultiSampling = true;
+            graphics.PreferMultiSampling = false;
             graphics.PreferredBackBufferWidth = 1440;
             graphics.PreferredBackBufferWidth = 900;
-            graphics.PreferMultiSampling = true;
-            graphics.SynchronizeWithVerticalRetrace = true;
+            //graphics.SynchronizeWithVerticalRetrace = true;
+            graphics.SynchronizeWithVerticalRetrace = false;
+            //IsFixedTimeStep = false;
+            //TargetElapsedTime = TimeSpan.FromSeconds(1 / 300f);
+
             graphics.ApplyChanges();
         }
 
@@ -71,6 +77,8 @@ namespace Silkroad
 
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
             GraphicsDevice.DepthStencilState = DepthStencilState.DepthRead;
+            GraphicsDevice.PresentationParameters.BackBufferWidth = 1440;
+            GraphicsDevice.PresentationParameters.BackBufferHeight = 900;
 
             base.Initialize();
         }

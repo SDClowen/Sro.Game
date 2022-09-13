@@ -1,4 +1,5 @@
-﻿using Silkroad.Components;
+﻿using Microsoft.Xna.Framework;
+using Silkroad.Components;
 using System.Collections.Generic;
 using System.IO;
 
@@ -27,9 +28,11 @@ namespace Silkroad.Materials
                     var obj = new mObject();
                     obj.group = i;
                     obj.uID = reader.ReadInt32();
-                    obj.x = reader.ReadSingle();
-                    obj.y = reader.ReadSingle();
-                    obj.z = reader.ReadSingle();
+                    obj.Position = new Vector3(
+                        reader.ReadSingle(),
+                        reader.ReadSingle(),
+                        reader.ReadSingle()
+                    );
                     reader.ReadBytes(2); // unkown
                     obj.angle = reader.ReadSingle();
                     obj.ID = reader.ReadInt32();
@@ -37,8 +40,8 @@ namespace Silkroad.Materials
                     obj.xsec = reader.ReadByte();
                     obj.ysec = reader.ReadByte();
 
-                    obj.x += (obj.xsec - Terrain.XSector) * 1920;
-                    obj.z += (obj.ysec - Terrain.YSector) * 1920;
+                    obj.Position.X += (obj.xsec - Terrain.XSector) * 1920;
+                    obj.Position.Z += (obj.ysec - Terrain.YSector) * 1920;
 
                     objects.Add(obj);
                 }
@@ -50,14 +53,12 @@ namespace Silkroad.Materials
 
     public struct mObject
     {
+        public int ID;
         public int group;
         public int uID;
-        public float x;
-        public float y;
-        public float z;
-        public float angle;
-        public int ID;
         public byte xsec;
         public byte ysec;
+        public Vector3 Position;
+        public float angle;
     }
 }

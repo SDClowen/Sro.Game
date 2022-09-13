@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Silkroad.Components;
 using Silkroad.Materials;
 using System;
 using System.Collections.Generic;
@@ -8,37 +9,35 @@ namespace Silkroad
 {
     internal class objMeshes
     {
-        public bms verts;
+        public bms Mesh;
         public Texture2D texture;
 
         public objMeshes(bms bms, Texture2D tex)
         {
-            this.verts = bms;
+            this.Mesh = bms;
             this.texture = tex;
         }
     }
 
     internal class MapObject
     {
-        public int x_r, y_r;
+        public int X, Y;
         public Bsr resourceInfo;
         public List<bms> meshes;
         public List<BmtManager> textures;
         private List<objMeshes> meshWithTextures;
-        private Vector3 position;
         private Texture2D blankTex;
         private mObject obj;
 
         public MapObject(mObject obj, int x, int y)
         {
-            this.x_r = x;
-            this.y_r = y;
+            X = x;
+            Y = y;
             meshes = new List<bms>();
             textures = new List<BmtManager>();
             meshWithTextures = new List<objMeshes>();
 
             this.obj = obj;
-            this.position = new Vector3(obj.x, obj.y, obj.z);
 
             string path = Program.Window.objectInfos.GetPathByID(obj.uID);
             resourceInfo = Bsr.ReadFromStream(Program.Data.GetFileBuffer(path));
@@ -84,35 +83,43 @@ namespace Silkroad
 
         public void Draw(MainGame game, BasicEffect effect)
         {
+            effect.View = Camera.View;
+            effect.Projection = Camera.Projection;
+            effect.VertexColorEnabled = false;
+
+            game.GraphicsDevice.RasterizerState = new RasterizerState
+            {
+                FillMode = FillMode.Solid,
+                CullMode = CullMode.CullClockwiseFace,
+                DepthClipEnable = true,
+                MultiSampleAntiAlias = true
+            };
+
+            game.GraphicsDevice.DepthStencilState = new DepthStencilState
+            {
+                DepthBufferEnable = true,
+            };
+
+
+            effect.EnableDefaultLighting();
+            effect.TextureEnabled = true;
+            //effect.Alpha = .05f;
+
+            effect.FogEnabled = false;
             foreach (objMeshes m in meshWithTextures)
             {
-                var anglePi = new SharpDX.AngleSingle(obj.angle, SharpDX.AngleType.Radian);
-                effect.World = Matrix.CreateRotationY(anglePi.Radians) * Matrix.CreateTranslation(this.position);
-
-                effect.View = game.Camera.View;
-                effect.Projection = game.Camera.Projection;
-                effect.VertexColorEnabled = false;
-
-                var rasterizerState = new RasterizerState();
-                rasterizerState.FillMode = FillMode.Solid;
-                rasterizerState.CullMode = CullMode.CullClockwiseFace;
-                rasterizerState.DepthClipEnable = true;
-                rasterizerState.MultiSampleAntiAlias = true;
-
-                game.GraphicsDevice.RasterizerState = rasterizerState;
-
-                effect.CurrentTechnique.Passes[0].Apply();
-                effect.EnableDefaultLighting();
+                /*var anglePi = new SharpDX.AngleSingle(obj.angle, SharpDX.AngleType.Radian);
+                effect.World = Matrix.CreateRotationY(anglePi.Radians) * Matrix.CreateTranslation(obj.Position);*/
+                effect.World = Matrix.CreateRotationY(obj.angle) * Matrix.CreateTranslation(obj.Position);
                 effect.Texture = m.texture;
-                effect.TextureEnabled = true;
 
                 foreach (EffectPass pass in effect.CurrentTechnique.Passes)
                 {
                     pass.Apply();
-                    VertexPositionNormalTexture[] verts = m.verts.GetVerticies();
-                    var indicies = m.verts.GetIndicies();
-                    game.GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList,
-                        verts, 0, verts.Length, indicies, 0, indicies.Length / 3);
+                    VertexPositionNormalTexture[] verts = m.Mesh.GetVerticies();
+                    var indicies = m.Mesh.GetIndicies();
+                    
+                    game.GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList,verts, 0, verts.Length, indicies, 0, indicies.Length / 3);
                 }
             }
         }

@@ -10,7 +10,7 @@ namespace Silkroad.Components
     /// </summary>
     public class Camera : GameComponent
     {
-        protected Vector3 m_position = new Vector3(700, 700, 10);
+        public static Vector3 Position = new Vector3(700, 700, 10);
         protected Vector3 m_up = Vector3.Up;
         protected Vector3 m_direction;
 
@@ -45,9 +45,8 @@ namespace Silkroad.Components
             m_aspectRatio = (float)m_windowWidth / (float)m_windowHeight;
 
             // Create the direction vector and normalize it since it will be used for movement
-            m_direction = Vector3.Zero - m_position;
+            m_direction = Vector3.Zero - Position;
             m_direction.Normalize();
-
             // Create default camera matrices
             Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, m_aspectRatio, m_nearPlaneDistance, m_farPlaneDistance);
             View = CreateLookAt();
@@ -63,8 +62,8 @@ namespace Silkroad.Components
         /// <param name="target">The target towards which the camera is pointing.</param>
         public Camera(Game game, Vector3 position, Vector3 target) : this(game)
         {
-            m_position = position;
-            m_direction = target - m_position;
+            Position = position;
+            m_direction = target - Position;
             m_direction.Normalize();
 
             View = CreateLookAt();
@@ -94,30 +93,30 @@ namespace Silkroad.Components
             // Move camera with WASD keys
             if (keyboard.IsKeyDown(Keys.W))
                 // Move forward and backwards by adding m_position and m_direction vectors
-                m_position += m_direction * m_speed;
+                Position += m_direction * m_speed;
 
             if (keyboard.IsKeyDown(Keys.S))
-                m_position -= m_direction * m_speed;
+                Position -= m_direction * m_speed;
 
             if (keyboard.IsKeyDown(Keys.A))
                 // Strafe by adding a cross product of m_up and m_direction vectors
-                m_position += Vector3.Cross(m_up, m_direction) * m_speed;
+                Position += Vector3.Cross(m_up, m_direction) * m_speed;
 
             if (keyboard.IsKeyDown(Keys.D))
-                m_position -= Vector3.Cross(m_up, m_direction) * m_speed;
+                Position -= Vector3.Cross(m_up, m_direction) * m_speed;
 
             if (keyboard.IsKeyDown(Keys.Space))
-                m_position += m_up * m_speed;
+                Position += m_up * m_speed;
 
             if (keyboard.IsKeyDown(Keys.LeftControl) || keyboard.IsKeyDown(Keys.X))
-                m_position -= m_up * m_speed;
+                Position -= m_up * m_speed;
 
             if (mouse.ScrollWheelValue != lastWheelValue)
             {
                 if(mouse.ScrollWheelValue > lastWheelValue)
-                    m_position += m_direction * m_wheelSpeed;
+                    Position += m_direction * m_wheelSpeed;
                 else
-                    m_position -= m_direction * m_wheelSpeed;
+                    Position -= m_direction * m_wheelSpeed;
 
                 lastWheelValue = mouse.ScrollWheelValue;
             }
@@ -197,16 +196,7 @@ namespace Silkroad.Components
         /// </summary>
         protected Matrix CreateLookAt()
         {
-            return Matrix.CreateLookAt(m_position, m_position + m_direction, m_up);
-        }
-
-
-        /// <summary>
-        /// Position vector.
-        /// </summary>
-        public Vector3 Position
-        {
-            get { return m_position; }
+            return Matrix.CreateLookAt(Position, Position + m_direction, m_up);
         }
 
 
@@ -240,13 +230,13 @@ namespace Silkroad.Components
         /// <summary>
         /// View matrix accessor.
         /// </summary>
-        public Matrix View { get; set; }
+        public static Matrix View { get; set; }
 
 
         /// <summary>
         /// Projection matrix accessor.
         /// </summary>
-        public Matrix Projection { get; set; }
+        public static Matrix Projection { get; set; }
 
     }
 }
