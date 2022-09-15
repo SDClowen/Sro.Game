@@ -10,12 +10,13 @@ namespace Silkroad.Components
     {
         private List<MapObject> mapObjects;
         KeyboardState lastkeyboardState;
-        BasicEffect _effect;
+        AlphaTestEffect _effect;
 
-        public MapRegion(MainGame game)
+        public MapRegion(MainGame game, AlphaTestEffect effect)
             : base(game)
         {
-            _effect = new BasicEffect(game.GraphicsDevice);
+            _effect = effect;
+            //_effect = new(game.GraphicsDevice);
             LoadTerrains();
             lastkeyboardState = Keyboard.GetState();
         }
@@ -34,6 +35,11 @@ namespace Silkroad.Components
             //LoadTerrain(xSector - 1, ySector - 1); //BL
             //LoadTerrain(xSector, ySector - 1); //BC
             //LoadTerrain(xSector + 1, ySector - 1); //BR
+        }
+
+        protected override void LoadContent()
+        {
+            base.LoadContent();
         }
 
         public override void Update(GameTime gameTime)
@@ -58,9 +64,6 @@ namespace Silkroad.Components
 
         public override void Draw(GameTime gameTime)
         {
-            _effect.LightingEnabled = true;
-            _effect.PreferPerPixelLighting = true;
-
             foreach (MapObject obj in mapObjects)
                 obj.Draw(Game as MainGame, _effect);
 
@@ -72,10 +75,10 @@ namespace Silkroad.Components
             mapObjects = new List<MapObject>();
             //var navMesh = new nvm(Path.Combine("navmesh", $"nv_{ysec:X}{xsec:X}.nvm"));
             var ofile = new ObjectFile(Program.Map.GetFileBuffer(string.Format(@"{0}\{1}.o2", ysec, xsec)));
-            foreach (mObject obj in ofile.objects)
+            foreach (MapObjectElement obj in ofile.Elements)
             {
                 //igrone since .cpd..
-                if (obj.uID == 923)
+                if (obj.Index == 923)
                     continue;
                 try
                 {

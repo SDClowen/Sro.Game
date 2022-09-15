@@ -1,12 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Silkroad.Materials
+﻿namespace Silkroad.Materials
 {
+    public struct Color4
+    {
+        public float R;
+        public float G;
+        public float B;
+        public float A;
+
+        public Color4(float r, float g, float b, float a)
+        {
+            R = r;
+            G = g;
+            B = b;
+            A = a;
+        }
+    }
     class BmtFile
     {
         public string Name;

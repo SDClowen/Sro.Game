@@ -10,7 +10,7 @@ namespace Silkroad.Components
     /// </summary>
     public class Camera : GameComponent
     {
-        public static Vector3 Position = new Vector3(700, 700, 10);
+        public static Vector3 Position = new Vector3(960, 960, 0);
         protected Vector3 m_up = Vector3.Up;
         protected Vector3 m_direction;
 
@@ -51,24 +51,6 @@ namespace Silkroad.Components
             Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, m_aspectRatio, m_nearPlaneDistance, m_farPlaneDistance);
             View = CreateLookAt();
         }
-
-
-        /// <summary>
-        /// Creates the instance of the camera at the given location.
-        /// </summary>
-        /// <param name="game">Provides graphics device initialization, game logic, 
-        /// rendering code, and a game loop.</param>
-        /// <param name="position">Position of the camera.</param>
-        /// <param name="target">The target towards which the camera is pointing.</param>
-        public Camera(Game game, Vector3 position, Vector3 target) : this(game)
-        {
-            Position = position;
-            m_direction = target - Position;
-            m_direction.Normalize();
-
-            View = CreateLookAt();
-        }
-
 
         /// <summary>
         /// Allows the game component to perform any initialization it needs to before starting

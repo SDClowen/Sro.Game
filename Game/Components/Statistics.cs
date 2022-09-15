@@ -54,7 +54,7 @@ namespace Silkroad.Components
         protected override void LoadContent()
         {
             m_spriteBatch = new SpriteBatch(GraphicsDevice);
-            m_font = m_content.Load<SpriteFont>(@"Statistics");
+            m_font = m_content.Load<SpriteFont>("Statistics");
 
             base.LoadContent();
         }

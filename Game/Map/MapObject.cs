@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Silkroad.Components;
 using Silkroad.Materials;
-using System;
 using System.Collections.Generic;
 
 namespace Silkroad
@@ -27,9 +26,9 @@ namespace Silkroad
         public List<BmtManager> textures;
         private List<objMeshes> meshWithTextures;
         private Texture2D blankTex;
-        private mObject obj;
+        private MapObjectElement obj;
 
-        public MapObject(mObject obj, int x, int y)
+        public MapObject(MapObjectElement obj, int x, int y)
         {
             X = x;
             Y = y;
@@ -39,7 +38,7 @@ namespace Silkroad
 
             this.obj = obj;
 
-            string path = Program.Window.objectInfos.GetPathByID(obj.uID);
+            string path = Program.Window.objectInfos.GetPathByID(obj.Index);
             resourceInfo = Bsr.ReadFromStream(Program.Data.GetFileBuffer(path));
             foreach (var mesh in resourceInfo.Meshs)
             {
@@ -52,6 +51,7 @@ namespace Silkroad
                 tex.Parse(Program.Data.GetFileBuffer(material.Path), material.Path);
                 textures.Add(tex);
             }
+
             blankTex = new Texture2D(Program.Window.GraphicsDevice, 1, 1);
 
             foreach (bms b in meshes)
@@ -81,16 +81,18 @@ namespace Silkroad
             return blankTex;
         }
 
-        public void Draw(MainGame game, BasicEffect effect)
+        public void Draw(MainGame game, AlphaTestEffect effect)
         {
             effect.View = Camera.View;
             effect.Projection = Camera.Projection;
-            effect.VertexColorEnabled = false;
+            //effect.EnableDefaultLighting();
+            //effect.VertexColorEnabled = false;
+            //effect.Alpha = 1f;
 
             game.GraphicsDevice.RasterizerState = new RasterizerState
             {
                 FillMode = FillMode.Solid,
-                CullMode = CullMode.CullClockwiseFace,
+                CullMode = CullMode.None,
                 DepthClipEnable = true,
                 MultiSampleAntiAlias = true
             };
@@ -101,25 +103,26 @@ namespace Silkroad
             };
 
 
-            effect.EnableDefaultLighting();
-            effect.TextureEnabled = true;
-            //effect.Alpha = .05f;
+            //effect.EnableDefaultLighting();
+            //effect.TextureEnabled = true;
 
-            effect.FogEnabled = false;
             foreach (objMeshes m in meshWithTextures)
             {
                 /*var anglePi = new SharpDX.AngleSingle(obj.angle, SharpDX.AngleType.Radian);
                 effect.World = Matrix.CreateRotationY(anglePi.Radians) * Matrix.CreateTranslation(obj.Position);*/
-                effect.World = Matrix.CreateRotationY(obj.angle) * Matrix.CreateTranslation(obj.Position);
+                effect.World = Matrix.CreateRotationY(obj.Theta) * Matrix.CreateTranslation(obj.Position);
                 effect.Texture = m.texture;
 
                 foreach (EffectPass pass in effect.CurrentTechnique.Passes)
                 {
                     pass.Apply();
-                    VertexPositionNormalTexture[] verts = m.Mesh.GetVerticies();
-                    var indicies = m.Mesh.GetIndicies();
-                    
-                    game.GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList,verts, 0, verts.Length, indicies, 0, indicies.Length / 3);
+
+                    game.GraphicsDevice.DrawUserIndexedPrimitives(
+                        PrimitiveType.TriangleList, 
+                        m.Mesh.Verticies, 0, 
+                        m.Mesh.Verticies.Length,
+                        m.Mesh.Indicies, 0,
+                        m.Mesh.Indicies.Length / 3);
                 }
             }
         }
