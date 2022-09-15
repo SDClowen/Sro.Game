@@ -66,7 +66,7 @@ namespace Silkroad.Materials
                     if (lightmapResolution > 0)
                     {
                         Vector2 unk12 = new Vector2(reader.ReadSingle(), reader.ReadSingle());
-                        Console.WriteLine($"unk12: {unk12}");
+                        //Console.WriteLine($"unk12: {unk12}");
                     }
                     Verticies[i] = new(verticie, /*uv[i],*/ textures[i]);
                     reader.BaseStream.Position += 12;
@@ -75,14 +75,14 @@ namespace Silkroad.Materials
                 if (lightmapResolution > 0)
                 {
                     string lightmap = new string(reader.ReadChars(reader.ReadInt32()));
-                    Console.WriteLine($"LightMap: {lightmap}");
+                    //Console.WriteLine($"LightMap: {lightmap}");
                 }
 
                 int boneCount = reader.ReadInt32();
                 for (int i = 0; i < boneCount; i++)
                 {
                     string test = new string(reader.ReadChars(reader.ReadInt32()));
-                    Console.WriteLine($"test: {test}");
+                    //Console.WriteLine($"test: {test}");
                 }
 
                 if (boneCount > 0)
