@@ -10,12 +10,10 @@ namespace Silkroad.Components
     {
         private List<MapObject> mapObjects;
         KeyboardState lastkeyboardState;
-        AlphaTestEffect _effect;
 
-        public MapRegion(MainGame game, AlphaTestEffect effect)
+        public MapRegion(MainGame game)
             : base(game)
         {
-            _effect = effect;
             //_effect = new(game.GraphicsDevice);
             LoadTerrains();
             lastkeyboardState = Keyboard.GetState();
@@ -64,8 +62,14 @@ namespace Silkroad.Components
 
         public override void Draw(GameTime gameTime)
         {
+            var game = Game as MainGame;
+            GraphicsDevice.BlendState = BlendState.Opaque;
+            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+            GraphicsDevice.SamplerStates[0] = SamplerState.PointWrap;
+            GraphicsDevice.RasterizerState = RasterizerState.CullNone;
+
             foreach (MapObject obj in mapObjects)
-                obj.Draw(Game as MainGame, _effect);
+                obj.Draw(game);
 
             base.Draw(gameTime);
         }

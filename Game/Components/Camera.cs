@@ -10,7 +10,7 @@ namespace Silkroad.Components
     /// </summary>
     public class Camera : GameComponent
     {
-        public static Vector3 Position = new Vector3(960, 960, 0);
+        public static Vector3 Position = new Vector3(1000, 300, 200);
         protected Vector3 m_up = Vector3.Up;
         protected Vector3 m_direction;
 
@@ -126,7 +126,7 @@ namespace Silkroad.Components
                 m_direction = Vector3.Transform(m_direction, m_rotation);
 
                 // Up vector should stay constant unless we're doing flying or vehicles
-                // m_up = Vector3.Transform(m_up, m_rotation);
+                //m_up = Vector3.Transform(m_up, m_rotation);
 
                 // Reset the position of the cursor to the center
                 //Mouse.SetPosition(m_windowWidth / 2, m_windowHeight / 2);

@@ -14,7 +14,7 @@ namespace Silkroad
     {
         GraphicsDeviceManager graphics;
         SkyDome _skyDome;
-        Camera _camera;
+        public Camera Camera;
         Statistics _stats;
         Texture2D _cursor;
         Terrain _terrain;
@@ -57,16 +57,16 @@ namespace Silkroad
             objectInfos = new objifo();
             objectInfos.Load();
             basicEffect = new(this.GraphicsDevice);
-            _camera = new(this);
+            Camera = new(this);
             _skyDome = new(this);
 
             // TODO: Add your initialization logic here
             _terrain = new(this);
-            _mapRegion = new(this, basicEffect);
+            _mapRegion = new(this);
 
-            Components.Add(_camera);
+            Components.Add(Camera);
             Components.Add(_terrain);
-            //Components.Add(_skyDome);
+            Components.Add(_skyDome);
             Components.Add(_mapRegion);
 
             _stats = new Statistics(this, Content);
@@ -85,10 +85,8 @@ namespace Silkroad
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             Mouse.PlatformSetCursor(MouseCursor.FromTexture2D(_cursor, 0, 0));
-            GraphicsDevice.BlendState = BlendState.AlphaBlend;
-            GraphicsDevice.DepthStencilState = DepthStencilState.DepthRead;
-        }
-
+        }    
+        
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
         /// all content.
@@ -119,7 +117,7 @@ namespace Silkroad
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.Black, 1.0f, 0);
+            GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.DarkCyan, 1f, 0);
 
             base.Draw(gameTime);
         }

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Silkroad.Components;
 using Silkroad.Materials;
 using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace Silkroad
 {
@@ -68,12 +69,12 @@ namespace Silkroad
                 {
                     if (meshPartName == texture.Name)
                     {
-                        if(texture.IsNotWithinSameDirectory)
+                        if (texture.IsNotWithinSameDirectory)
                             return DDS.GetTexture(Program.Data.GetFileBuffer(texture.DiffuseMap), Program.Window.GraphicsDevice);
-                        
+                            
                         string path = bmtTexture.Path.Substring(0, bmtTexture.Path.LastIndexOf('\\') + 1);
                         path += texture.DiffuseMap;
-                        
+
                         return DDS.GetTexture(Program.Data.GetFileBuffer(path), Program.Window.GraphicsDevice);
                     }
                 }
@@ -81,48 +82,35 @@ namespace Silkroad
             return blankTex;
         }
 
-        public void Draw(MainGame game, AlphaTestEffect effect)
+        public void Draw(MainGame game)
         {
-            effect.View = Camera.View;
-            effect.Projection = Camera.Projection;
-            //effect.EnableDefaultLighting();
+            var basicEffect = game.basicEffect;
+            //basicEffect.TextureEnabled = true;
+            basicEffect.View = Camera.View;
+            basicEffect.Projection = Camera.Projection;
+            //basicEffect.LightingEnabled = true;
+            //basicEffect.PreferPerPixelLighting = true;
+            //basicEffect.EnableDefaultLighting();
             //effect.VertexColorEnabled = false;
-            //effect.Alpha = 1f;
-
-            game.GraphicsDevice.RasterizerState = new RasterizerState
-            {
-                FillMode = FillMode.Solid,
-                CullMode = CullMode.None,
-                DepthClipEnable = true,
-                MultiSampleAntiAlias = true
-            };
-
-            game.GraphicsDevice.DepthStencilState = new DepthStencilState
-            {
-                DepthBufferEnable = true,
-            };
-
-
-            //effect.EnableDefaultLighting();
-            //effect.TextureEnabled = true;
 
             foreach (objMeshes m in meshWithTextures)
             {
                 /*var anglePi = new SharpDX.AngleSingle(obj.angle, SharpDX.AngleType.Radian);
                 effect.World = Matrix.CreateRotationY(anglePi.Radians) * Matrix.CreateTranslation(obj.Position);*/
-                effect.World = Matrix.CreateRotationY(obj.Theta) * Matrix.CreateTranslation(obj.Position);
-                effect.Texture = m.texture;
+                basicEffect.World = Matrix.CreateRotationY(obj.Theta) * Matrix.CreateTranslation(obj.Position);
+                basicEffect.Texture = m.texture; 
 
-                foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+                foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
                 {
                     pass.Apply();
 
+                    var indicies = m.Mesh.Indicies;
                     game.GraphicsDevice.DrawUserIndexedPrimitives(
                         PrimitiveType.TriangleList, 
                         m.Mesh.Verticies, 0, 
                         m.Mesh.Verticies.Length,
-                        m.Mesh.Indicies, 0,
-                        m.Mesh.Indicies.Length / 3);
+                        indicies, 0,
+                        indicies.Length / 3);
                 }
             }
         }
