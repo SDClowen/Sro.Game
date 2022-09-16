@@ -1,11 +1,9 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using SharpDX.Direct3D9;
 using Silkroad.Components;
 using Silkroad.Materials;
 using System;
-using System.IO;
 
 namespace Silkroad
 {
@@ -15,6 +13,7 @@ namespace Silkroad
     public class MainGame : Game
     {
         GraphicsDeviceManager graphics;
+        SkyDome _skyDome;
         public Camera Camera;
         Statistics _stats;
         Texture2D _cursor;
@@ -22,7 +21,7 @@ namespace Silkroad
         MapRegion _mapRegion;
 
         public static string Path = @"D:\Silkroad\Clients\Official\SilkroadOnline_GlobalOfficial_v1_281";
-        public BasicEffect basicEffect;
+        public AlphaTestEffect basicEffect;
         public objifo objectInfos;
         protected SpriteBatch _spriteBatch;
 
@@ -33,18 +32,15 @@ namespace Silkroad
             Window.AllowUserResizing = true;
             Window.Title = "Silkroad World Editor";
 
-            IntPtr ptr = this.Window.Handle;
-            System.Windows.Forms.Form form = (System.Windows.Forms.Form)System.Windows.Forms.Control.FromHandle(ptr);
-            form.Size = new System.Drawing.Size(1440, 900);
-
             graphics.HardwareModeSwitch = true;
             graphics.PreferMultiSampling = false;
-            graphics.PreferredBackBufferWidth = 1440;
+            graphics.PreferredBackBufferWidth = 1600;
             graphics.PreferredBackBufferWidth = 900;
-            //graphics.SynchronizeWithVerticalRetrace = true;
-            graphics.SynchronizeWithVerticalRetrace = false;
-            //IsFixedTimeStep = false;
-            //TargetElapsedTime = TimeSpan.FromSeconds(1 / 300f);
+            graphics.GraphicsProfile = GraphicsProfile.HiDef;
+
+            graphics.SynchronizeWithVerticalRetrace = true;
+            IsFixedTimeStep = false;
+            TargetElapsedTime = TimeSpan.FromSeconds(1 / 300f);
 
             graphics.ApplyChanges();
         }
@@ -60,25 +56,21 @@ namespace Silkroad
             IsMouseVisible = true;
             objectInfos = new objifo();
             objectInfos.Load();
-
             basicEffect = new(this.GraphicsDevice);
+            Camera = new(this);
+            _skyDome = new(this);
 
             // TODO: Add your initialization logic here
             _terrain = new(this);
             _mapRegion = new(this);
-            Camera = new(this);
 
-            Components.Add(_terrain);
-            Components.Add(_mapRegion);
             Components.Add(Camera);
+            Components.Add(_terrain);
+            Components.Add(_skyDome);
+            Components.Add(_mapRegion);
 
             _stats = new Statistics(this, Content);
             Components.Add(_stats);
-
-            GraphicsDevice.BlendState = BlendState.AlphaBlend;
-            GraphicsDevice.DepthStencilState = DepthStencilState.DepthRead;
-            GraphicsDevice.PresentationParameters.BackBufferWidth = 1440;
-            GraphicsDevice.PresentationParameters.BackBufferHeight = 900;
 
             base.Initialize();
         }
@@ -89,13 +81,12 @@ namespace Silkroad
         /// </summary>
         protected override void LoadContent()
         {
-            basicEffect = new BasicEffect(GraphicsDevice);
             _cursor = Content.Load<Texture2D>("cursor");
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             Mouse.PlatformSetCursor(MouseCursor.FromTexture2D(_cursor, 0, 0));
-        }
-
+        }    
+        
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
         /// all content.
@@ -126,7 +117,7 @@ namespace Silkroad
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.Black, 1.0f, 0);
+            GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.DarkCyan, 1f, 0);
 
             base.Draw(gameTime);
         }

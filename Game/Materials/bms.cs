@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Accessibility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -88,30 +89,47 @@ namespace Silkroad.Materials
                     }
                 }
                 reader.Close();
-            }
-        }
 
-        private short[,] faces;
-
-        public VertexPositionNormalTexture[] GetVerticies()
-        {
-            return vert;
-        }
-
-        public int[] GetIndicies()
-        {
-            List<int> tmp = new();
-            if (faces != null)
-            {
-                for (int i = 0; i < faces.Length / 3; i++)
+                List<int> tmp = new();
+                if (faces != null)
                 {
-                    for (int x = 0; x < 3; x++)
+                    for (int i = 0; i < faces.Length / 3; i++)
                     {
-                        tmp.Add(faces[i, x]);
+                        for (int x = 0; x < 3; x++)
+                        {
+                            tmp.Add(faces[i, x]);
+                        }
                     }
                 }
+
+                _indicies = tmp.ToArray();
             }
-            return tmp.ToArray();
+        }
+
+        private short[,] faces = null;
+        private int[] _indicies = null;
+
+        public VertexPositionNormalTexture[] Verticies => vert;
+
+        public int[] Indicies
+        {
+            get
+            {
+                List<int> tmp = new();
+                if (faces != null)
+                {
+                    for (int i = 0; i < faces.Length / 3; i++)
+                    {
+                        for (int x = 0; x < 3; x++)
+                        {
+                            tmp.Add(faces[i, x]);
+                        }
+                    }
+                }
+
+                return tmp.ToArray();
+                return _indicies;
+            }
         }
     }
 }

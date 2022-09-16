@@ -16,6 +16,12 @@ namespace Silkroad.Components
             public int[] indicies;
         }
 
+        /*
+        * Hotan: 135, 92
+        * Jangan: 168, 97
+        * Bandit Mountain: 160, 92
+        *
+        */
         public static int XSector = 168;
         public static int YSector = 97;
 

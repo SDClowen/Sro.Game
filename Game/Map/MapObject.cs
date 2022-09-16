@@ -2,8 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using Silkroad.Components;
 using Silkroad.Materials;
-using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace Silkroad
 {
@@ -27,9 +27,9 @@ namespace Silkroad
         public List<BmtManager> textures;
         private List<objMeshes> meshWithTextures;
         private Texture2D blankTex;
-        private mObject obj;
+        private MapObjectElement obj;
 
-        public MapObject(mObject obj, int x, int y)
+        public MapObject(MapObjectElement obj, int x, int y)
         {
             X = x;
             Y = y;
@@ -39,7 +39,7 @@ namespace Silkroad
 
             this.obj = obj;
 
-            string path = Program.Window.objectInfos.GetPathByID(obj.uID);
+            string path = Program.Window.objectInfos.GetPathByID(obj.Index);
             resourceInfo = Bsr.ReadFromStream(Program.Data.GetFileBuffer(path));
             foreach (var mesh in resourceInfo.Meshs)
             {
@@ -52,6 +52,7 @@ namespace Silkroad
                 tex.Parse(Program.Data.GetFileBuffer(material.Path), material.Path);
                 textures.Add(tex);
             }
+
             blankTex = new Texture2D(Program.Window.GraphicsDevice, 1, 1);
 
             foreach (bms b in meshes)
@@ -68,12 +69,12 @@ namespace Silkroad
                 {
                     if (meshPartName == texture.Name)
                     {
-                        if(texture.IsNotWithinSameDirectory)
+                        if (texture.IsNotWithinSameDirectory)
                             return DDS.GetTexture(Program.Data.GetFileBuffer(texture.DiffuseMap), Program.Window.GraphicsDevice);
-                        
+                            
                         string path = bmtTexture.Path.Substring(0, bmtTexture.Path.LastIndexOf('\\') + 1);
                         path += texture.DiffuseMap;
-                        
+
                         return DDS.GetTexture(Program.Data.GetFileBuffer(path), Program.Window.GraphicsDevice);
                     }
                 }
@@ -81,45 +82,35 @@ namespace Silkroad
             return blankTex;
         }
 
-        public void Draw(MainGame game, BasicEffect effect)
+        public void Draw(MainGame game)
         {
-            effect.View = Camera.View;
-            effect.Projection = Camera.Projection;
-            effect.VertexColorEnabled = false;
+            var basicEffect = game.basicEffect;
+            //basicEffect.TextureEnabled = true;
+            basicEffect.View = Camera.View;
+            basicEffect.Projection = Camera.Projection;
+            //basicEffect.LightingEnabled = true;
+            //basicEffect.PreferPerPixelLighting = true;
+            //basicEffect.EnableDefaultLighting();
+            //effect.VertexColorEnabled = false;
 
-            game.GraphicsDevice.RasterizerState = new RasterizerState
-            {
-                FillMode = FillMode.Solid,
-                CullMode = CullMode.CullClockwiseFace,
-                DepthClipEnable = true,
-                MultiSampleAntiAlias = true
-            };
-
-            game.GraphicsDevice.DepthStencilState = new DepthStencilState
-            {
-                DepthBufferEnable = true,
-            };
-
-
-            effect.EnableDefaultLighting();
-            effect.TextureEnabled = true;
-            //effect.Alpha = .05f;
-
-            effect.FogEnabled = false;
             foreach (objMeshes m in meshWithTextures)
             {
                 /*var anglePi = new SharpDX.AngleSingle(obj.angle, SharpDX.AngleType.Radian);
                 effect.World = Matrix.CreateRotationY(anglePi.Radians) * Matrix.CreateTranslation(obj.Position);*/
-                effect.World = Matrix.CreateRotationY(obj.angle) * Matrix.CreateTranslation(obj.Position);
-                effect.Texture = m.texture;
+                basicEffect.World = Matrix.CreateRotationY(obj.Theta) * Matrix.CreateTranslation(obj.Position);
+                basicEffect.Texture = m.texture; 
 
-                foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+                foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
                 {
                     pass.Apply();
-                    VertexPositionNormalTexture[] verts = m.Mesh.GetVerticies();
-                    var indicies = m.Mesh.GetIndicies();
-                    
-                    game.GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList,verts, 0, verts.Length, indicies, 0, indicies.Length / 3);
+
+                    var indicies = m.Mesh.Indicies;
+                    game.GraphicsDevice.DrawUserIndexedPrimitives(
+                        PrimitiveType.TriangleList, 
+                        m.Mesh.Verticies, 0, 
+                        m.Mesh.Verticies.Length,
+                        indicies, 0,
+                        indicies.Length / 3);
                 }
             }
         }

@@ -43,6 +43,7 @@ namespace Silkroad.Components
             m_statistics["Region"] = "0";
             m_statistics["Mouse"] = "0";
             m_statistics["Camera"] = "0";
+            m_statistics["Screen"] = "0";
 
             base.Initialize();
         }
@@ -54,7 +55,7 @@ namespace Silkroad.Components
         protected override void LoadContent()
         {
             m_spriteBatch = new SpriteBatch(GraphicsDevice);
-            m_font = m_content.Load<SpriteFont>(@"Statistics");
+            m_font = m_content.Load<SpriteFont>("Statistics");
 
             base.LoadContent();
         }
@@ -96,6 +97,9 @@ namespace Silkroad.Components
                 m_statistics["Region"] = $"{Terrain.XSector}x{Terrain.YSector}";
                 m_statistics["Mouse"] = $"X:{Mouse.GetState().X:0.0} Y:{Mouse.GetState().Y:0.0}";
                 m_statistics["Camera"] = $"X:{Camera.Position.X:0.0} Z:{Camera.Position.Z:0.0} Y:{Camera.Position.Y:0.0}";
+
+                var game = Game as MainGame;
+                m_statistics["Screen"] = $"\nPitch:{game.Camera.Pitch:0.00}    Yaw:{game.Camera.Yaw:0.00}";
             }
 
             base.Update(gameTime);

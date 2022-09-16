@@ -7,58 +7,58 @@ namespace Silkroad.Materials
 {
     internal class ObjectFile
     {
-        private BinaryReader reader;
-        public List<mObject> objects;
+        public List<MapObjectElement> Elements = new(128);
 
-        public ObjectFile(byte[] file)
+        public ObjectFile(byte[] buffer)
         {
-            reader = new BinaryReader(new MemoryStream(file));
-            objects = new List<mObject>();
-            ParseObjectFile(reader);
-        }
-
-        private void ParseObjectFile(BinaryReader reader)
-        {
-            reader.BaseStream.Position += 12; //skip header
-            for (int i = 0; i < 144; i++)
+            using (var reader = new BinaryReader(new MemoryStream(buffer)))
             {
-                var count = reader.ReadInt16();
-                for (int j = 0; j < count; j++)
+                reader.BaseStream.Position += 12; //skip header
+                for (int i = 0; i < 144; i++)
                 {
-                    var obj = new mObject();
-                    obj.group = i;
-                    obj.uID = reader.ReadInt32();
-                    obj.Position = new Vector3(
-                        reader.ReadSingle(),
-                        reader.ReadSingle(),
-                        reader.ReadSingle()
-                    );
-                    reader.ReadBytes(2); // unkown
-                    obj.angle = reader.ReadSingle();
-                    obj.ID = reader.ReadInt32();
-                    reader.ReadBytes(2);
-                    obj.xsec = reader.ReadByte();
-                    obj.ysec = reader.ReadByte();
+                    var count = reader.ReadInt16();
+                    for (int j = 0; j < count; j++)
+                    {
+                        var obj = new MapObjectElement
+                        {
+                            Index = reader.ReadInt32(),
+                            Position = new Vector3
+                            (
+                                reader.ReadSingle(),
+                                reader.ReadSingle(),
+                                reader.ReadSingle()
+                            ),
 
-                    obj.Position.X += (obj.xsec - Terrain.XSector) * 1920;
-                    obj.Position.Z += (obj.ysec - Terrain.YSector) * 1920;
+                            UnknownFlag1 = reader.ReadUInt16(),
 
-                    objects.Add(obj);
+                            Theta = reader.ReadSingle(),
+                            Id = reader.ReadInt32(),
+
+                            UnknownFlag2 = reader.ReadUInt16(),
+
+                            RegionX = reader.ReadByte(),
+                            RegionY = reader.ReadByte()
+                        };
+
+                        obj.Position.X += (obj.RegionX - Terrain.XSector) * 1920;
+                        obj.Position.Z += (obj.RegionY - Terrain.YSector) * 1920;
+
+                        Elements.Add(obj);
+                    }
                 }
             }
-
-            //objects.Reverse();
         }
     }
 
-    public struct mObject
+    public struct MapObjectElement
     {
-        public int ID;
-        public int group;
-        public int uID;
-        public byte xsec;
-        public byte ysec;
+        public int Index;
+        public int Id;
+        public byte RegionX;
+        public byte RegionY;
         public Vector3 Position;
-        public float angle;
+        public float Theta;
+        public ushort UnknownFlag1;
+        public ushort UnknownFlag2;
     }
 }

@@ -95,7 +95,7 @@ namespace Silkroad
         public static Texture2D GetTexture(byte[] file, GraphicsDevice device)
         {
             Texture2D tmpTex;
-            DDSFromStream(new MemoryStream(file), device, 20, false, out tmpTex);
+            DDSFromStream(new MemoryStream(file), device, 20, true, out tmpTex);
             return tmpTex;
         }
 

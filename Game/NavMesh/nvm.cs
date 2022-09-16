@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -25,11 +26,10 @@ namespace Silkroad
             reader.Dispose();
             reader.Close();
 
-
             var match = Regex.Match(file, "([0-9a-zA-Z]{2})([0-9a-zA-Z]{2}).nvm$");
             if (!match.Success)
             {
-                MessageBox.Show("", "Error: Region offset cannot be extracted from filename, the terrain won't be extracted [" + file + "]", null);
+                Console.WriteLine("Error: Region offset cannot be extracted from filename, the terrain won't be extracted [" + file + "]");
                 return;
             }
 
