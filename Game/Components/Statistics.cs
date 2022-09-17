@@ -99,7 +99,7 @@ namespace Silkroad.Components
                 m_statistics["Camera"] = $"X:{Camera.Position.X:0.0} Z:{Camera.Position.Z:0.0} Y:{Camera.Position.Y:0.0}";
 
                 var game = Game as MainGame;
-                m_statistics["Screen"] = $"\nPitch:{game.Camera.Pitch:0.00}    Yaw:{game.Camera.Yaw:0.00}";
+                m_statistics["Screen"] = $"Pitch:{game.Camera.Pitch:0.00} Yaw:{game.Camera.Yaw:0.00}";
             }
 
             base.Update(gameTime);

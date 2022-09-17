@@ -74,11 +74,16 @@ namespace Silkroad.Components
             base.Draw(gameTime);
         }
 
-        private void LoadTerrain(int xsec, int ysec)
+        private bool LoadTerrain(int xsec, int ysec)
         {
             mapObjects = new List<MapObject>();
             //var navMesh = new nvm(Path.Combine("navmesh", $"nv_{ysec:X}{xsec:X}.nvm"));
-            var ofile = new ObjectFile(Program.Map.GetFileBuffer(string.Format(@"{0}\{1}.o2", ysec, xsec)));
+
+            var buffer = Program.Map.GetFileBuffer($@"{ysec}\{xsec}.o2");
+            if (buffer == null)
+                return false;
+
+            var ofile = new ObjectFile(buffer);
             foreach (MapObjectElement obj in ofile.Elements)
             {
                 //igrone since .cpd..
@@ -91,8 +96,10 @@ namespace Silkroad.Components
                 }
                 catch
                 {
-                }   
+                }
             }
+
+            return true;
         }
     }
 }

@@ -154,8 +154,8 @@ namespace Silkroad.Components
             Matrix View = Camera.View;
             Matrix Projection = Camera.Projection;
 
-            //game.GraphicsDevice.RenderState.DepthBufferEnable = false;
-            //game.GraphicsDevice.RenderState.DepthBufferWriteEnable = false;
+            //Game.GraphicsDevice.DepthStencilState.DepthBufferEnable = false;
+            //Game.GraphicsDevice.DepthStencilState.DepthBufferWriteEnable = false;
 
             GraphicsDevice graphics = Game.GraphicsDevice;
 
@@ -170,8 +170,6 @@ namespace Silkroad.Components
 
                 Matrix WorldIT = Matrix.Invert(World);
                 WorldIT = Matrix.Transpose(WorldIT);
-
-
 
                 foreach (Effect effect in mesh.Effects)
                 {
@@ -197,15 +195,20 @@ namespace Silkroad.Components
                     effect.Parameters["largeSunRadiusAttenuation"].SetValue(parameters.LargeSunRadiusAttenuation);
                     effect.Parameters["dayToSunsetSharpness"].SetValue(parameters.DayToSunsetSharpness);
                     effect.Parameters["hazeTopAltitude"].SetValue(parameters.HazeTopAltitude);
+                    try
+                    {
 
-
-                    //mesh.Draw();
+                        mesh.Draw();
+                    }
+                    catch
+                    {
+                    }
                 }
 
             }
 
-            //game.GraphicsDevice.RenderState.DepthBufferWriteEnable = true;
-            //game.GraphicsDevice.RenderState.DepthBufferEnable = true;
+            //Game.GraphicsDevice.DepthStencilState.DepthBufferEnable = true;
+            //Game.GraphicsDevice.DepthStencilState.DepthBufferWriteEnable = true;
         }
 
         public static void RemapModel(Model model, Effect effect)
