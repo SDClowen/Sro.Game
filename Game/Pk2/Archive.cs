@@ -10,7 +10,7 @@ namespace Silkroad.Pk2
     public partial class Archive : IDisposable
     {
         #region Fields
-        public string Key { get; private set; }
+
         public FileStream Stream;
         private Blowfish _blowfish;
         private Header _header;
@@ -57,15 +57,19 @@ namespace Silkroad.Pk2
 
         public void SetBlowfishKey(string key)
         {
-            Key = key;
-            _blowfishKey = BlowfishKey.Generate(key);
-            _blowfish = new Blowfish();
-            _blowfish.Initialize(_blowfishKey);
+            SetBlowfishKey(key.Select(p => (byte)p).ToArray());
         }
 
         public void SetBlowfishKey(byte[] key)
         {
-            _blowfishKey = BlowfishKey.Generate(key);
+            var baseKey = new byte[] { 0x03, 0xF8, 0xE4, 0x44, 0x88, 0x99, 0x3F, 0x64, 0xFE, 0x35 };
+            // Their key modification algorithm for the final blowfish key
+            _blowfishKey = new byte[key.Length];
+            for (byte x = 0; x < key.Length; ++x)
+            {
+                _blowfishKey[x] = (byte)(key[x] ^ baseKey[x]);
+            }
+
             _blowfish = new Blowfish();
             _blowfish.Initialize(_blowfishKey);
         }
