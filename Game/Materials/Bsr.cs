@@ -28,12 +28,10 @@ namespace Silkroad.Materials
         public uint flagsUnkUInt4 { get; set; }
 
         public uint Type { get; set; }
-        public uint NameLength { get; set; }
         public string Name { get; set; }
 
         public byte[] unkBuffer { get; set; }
 
-        public uint rootMeshLength { get; set; }
         public string rootMesh { get; set; }
         public float[] BoundingBox0 { get; set; }
         public float[] BoundingBox1 { get; set; }
@@ -64,26 +62,22 @@ namespace Silkroad.Materials
         public class Material
         {
             public uint ID { get; set; }
-            public uint PathLength { get; set; }
             public string Path { get; set; }
         }
 
         public class Mesh
         {
-            public uint PathLength { get; set; }
-            public string Path { get; set; }
             public uint UnkUInt0 { get; set; }
+            public string Path { get; set; }
         }
 
         public class Animation
         {
-            public uint PathLength { get; set; }
             public string Path { get; set; }
         }
 
         public class Skeleton
         {
-            public uint PathLength { get; set; }
             public string Path { get; set; }
             public uint extraByteCount { get; set; }
             public byte[] ExtraBytes { get; set; }
@@ -91,9 +85,7 @@ namespace Silkroad.Materials
 
         public class MeshGroup
         {
-            public uint NameLength { get; set; }
             public string Name { get; set; }
-            public uint FileCount { get; set; }
             public uint[] FileIndex { get; set; }
         }
 
@@ -157,13 +149,11 @@ namespace Silkroad.Materials
                 bsr.flagsUnkUInt4 = stream.ReadUInt32();
 
                 bsr.Type = stream.ReadUInt32();
-                bsr.NameLength = stream.ReadUInt32();
-                bsr.Name = Encoding.ASCII.GetString(stream.ReadBytes((int)bsr.NameLength));
+                bsr.Name = stream.ReadFixedSizeString();
 
                 bsr.unkBuffer = stream.ReadBytes(48);
 
-                bsr.rootMeshLength = stream.ReadUInt32();
-                bsr.rootMesh = Encoding.ASCII.GetString(stream.ReadBytes((int)bsr.rootMeshLength));
+                bsr.rootMesh = stream.ReadFixedSizeString();
 
                 bsr.BoundingBox0 = new float[6];
                 bsr.BoundingBox0[0] = stream.ReadSingle();
@@ -191,12 +181,11 @@ namespace Silkroad.Materials
                 bsr.Materials = new Material[bsr.materialSetCount];
                 for (int i = 0; i < bsr.materialSetCount; i++)
                 {
-                    var material = new Material();
-                    material.ID = stream.ReadUInt32();
-                    material.PathLength = stream.ReadUInt32();
-                    material.Path = Encoding.ASCII.GetString(stream.ReadBytes((int)material.PathLength));
-
-                    bsr.Materials[i] = material;
+                    bsr.Materials[i] = new Material
+                    {
+                        ID = stream.ReadUInt32(),
+                        Path = stream.ReadFixedSizeString()
+                    };
                 }
 
                 //Mesh
@@ -206,8 +195,7 @@ namespace Silkroad.Materials
                 for (int i = 0; i < bsr.meshCount; i++)
                 {
                     var mesh = new Mesh();
-                    mesh.PathLength = stream.ReadUInt32();
-                    mesh.Path = Encoding.ASCII.GetString(stream.ReadBytes((int)mesh.PathLength));
+                    mesh.Path = stream.ReadFixedSizeString();
 
                     if (bsr.flagsUnkUInt0 == 1)
                         mesh.UnkUInt0 = stream.ReadUInt32();
@@ -224,8 +212,7 @@ namespace Silkroad.Materials
                 for (int i = 0; i < bsr.animationCount; i++)
                 {
                     var animation = new Animation();
-                    animation.PathLength = stream.ReadUInt32();
-                    animation.Path = Encoding.ASCII.GetString(stream.ReadBytes((int)animation.PathLength));
+                    animation.Path = stream.ReadFixedSizeString();
 
                     bsr.Animations[i] = animation;
                 }
@@ -236,8 +223,7 @@ namespace Silkroad.Materials
                 for (int i = 0; i < bsr.skeletonCount; i++)
                 {
                     var skeleton = new Skeleton();
-                    skeleton.PathLength = stream.ReadUInt32();
-                    skeleton.Path = Encoding.ASCII.GetString(stream.ReadBytes((int)skeleton.PathLength));
+                    skeleton.Path = stream.ReadFixedSizeString();
                     skeleton.extraByteCount = stream.ReadUInt32();
                     skeleton.ExtraBytes = stream.ReadBytes((int)skeleton.extraByteCount);
 
@@ -250,12 +236,12 @@ namespace Silkroad.Materials
                 for (int i = 0; i < bsr.meshGroupCount; i++)
                 {
                     var meshGroup = new MeshGroup();
-                    meshGroup.NameLength = stream.ReadUInt32();
-                    meshGroup.Name = Encoding.ASCII.GetString(stream.ReadBytes((int)meshGroup.NameLength));
-                    meshGroup.FileCount = stream.ReadUInt32();
-                    meshGroup.FileIndex = new uint[meshGroup.FileCount];
+                    meshGroup.Name = stream.ReadFixedSizeString();
+                    
+                    var fileCount = stream.ReadUInt32();
+                    meshGroup.FileIndex = new uint[fileCount];
 
-                    for (int j = 0; j < meshGroup.FileCount; j++)
+                    for (int j = 0; j < fileCount; j++)
                         meshGroup.FileIndex[j] = stream.ReadUInt32();
 
                     bsr.MeshGroups[i] = meshGroup;
@@ -320,7 +306,7 @@ namespace Silkroad.Materials
                 //
                 // etc...
                 //
-                stream.Close();
+
                 stream.Close();
                 return bsr;
             }

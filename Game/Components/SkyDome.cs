@@ -195,14 +195,9 @@ namespace Silkroad.Components
                     effect.Parameters["largeSunRadiusAttenuation"].SetValue(parameters.LargeSunRadiusAttenuation);
                     effect.Parameters["dayToSunsetSharpness"].SetValue(parameters.DayToSunsetSharpness);
                     effect.Parameters["hazeTopAltitude"].SetValue(parameters.HazeTopAltitude);
-                    try
-                    {
 
-                        mesh.Draw();
-                    }
-                    catch
-                    {
-                    }
+                    //exception
+                    //mesh.Draw();
                 }
 
             }
