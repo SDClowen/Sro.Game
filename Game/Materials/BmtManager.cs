@@ -22,10 +22,10 @@ namespace Silkroad.Materials
 
                     var nameLen = stream.ReadInt32();
                     entry.Name = new string(stream.ReadChars(nameLen));
-                    entry.Diffuse = new(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
-                    entry.Ambient = new(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
-                    entry.Specular = new(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
-                    entry.Emissive = new(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
+                    entry.DiffuseColor = new(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
+                    entry.AmbientColor = new(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
+                    entry.SpecularColor = new(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
+                    entry.EmissiveColor = new(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
                     entry.unkFloat16 = stream.ReadSingle();
                     entry.unkUInt1 = stream.ReadInt32();
                     entry.DiffuseMap = new string(stream.ReadChars(stream.ReadInt32()));

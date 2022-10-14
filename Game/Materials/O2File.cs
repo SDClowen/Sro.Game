@@ -5,11 +5,11 @@ using System.IO;
 
 namespace Silkroad.Materials
 {
-    internal class ObjectFile
+    internal class O2File
     {
-        public List<MapObjectElement> Elements = new(128);
+        public List<O2FileElement> Elements = new(128);
 
-        public ObjectFile(byte[] buffer)
+        public O2File(byte[] buffer)
         {
             using (var reader = new BinaryReader(new MemoryStream(buffer)))
             {
@@ -19,7 +19,7 @@ namespace Silkroad.Materials
                     var count = reader.ReadInt16();
                     for (int j = 0; j < count; j++)
                     {
-                        var obj = new MapObjectElement
+                        var obj = new O2FileElement
                         {
                             Index = reader.ReadInt32(),
                             Position = new Vector3
@@ -50,7 +50,7 @@ namespace Silkroad.Materials
         }
     }
 
-    public struct MapObjectElement
+    public struct O2FileElement
     {
         public int Index;
         public int Id;

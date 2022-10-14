@@ -83,8 +83,8 @@ namespace Silkroad.Components
             if (buffer == null)
                 return false;
 
-            var ofile = new ObjectFile(buffer);
-            foreach (MapObjectElement obj in ofile.Elements)
+            var ofile = new O2File(buffer);
+            foreach (O2FileElement obj in ofile.Elements)
             {
                 //igrone since .cpd..
                 if (obj.Index == 923)

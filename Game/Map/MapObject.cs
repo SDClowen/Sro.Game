@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Silkroad.Components;
 using Silkroad.Materials;
 using System.Collections.Generic;
-using System.Windows.Forms;
 
 namespace Silkroad
 {
@@ -27,9 +26,9 @@ namespace Silkroad
         public List<BmtManager> textures;
         private List<objMeshes> meshWithTextures;
         private Texture2D blankTex;
-        private MapObjectElement obj;
+        private O2FileElement obj;
 
-        public MapObject(MapObjectElement obj, int x, int y)
+        public MapObject(O2FileElement obj, int x, int y)
         {
             X = x;
             Y = y;

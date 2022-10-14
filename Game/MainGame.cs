@@ -20,7 +20,7 @@ namespace Silkroad
         Terrain _terrain;
         MapRegion _mapRegion;
 
-        public static string Path = @"D:\Silkroad\Clients\Official\SilkroadOnline_GlobalOfficial_v1_281";
+        public static string Path = @"E:\Clients\SilkroadOnline_GlobalOfficial_v1_225";
         public AlphaTestEffect basicEffect;
         public objifo objectInfos;
         protected SpriteBatch _spriteBatch;
