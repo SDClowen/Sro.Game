@@ -58,7 +58,7 @@ namespace Silkroad
                     for (int y = 0; y < 97; y++)
                     {
                         vertices[x + y * 97].Position = new Vector3(x * 20, GetHightAt(x, y), y * 20);
-                        vertices[x + y * 97].Color = Color.FromNonPremultiplied(214, 222, 213, 22);
+                        vertices[x + y * 97].Color = Color.FromNonPremultiplied(0, 0, 0, 5);
 
                     }
                 }

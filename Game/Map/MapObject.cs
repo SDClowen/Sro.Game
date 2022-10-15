@@ -38,7 +38,7 @@ namespace Silkroad
 
             this.obj = obj;
 
-            string path = Program.Window.objectInfos.GetPathByID(obj.Index);
+            string path = Program.Window.ObjIfo.GetPathByID(obj.Index);
             resourceInfo = Bsr.ReadFromStream(Program.Data.GetFileBuffer(path));
             foreach (var mesh in resourceInfo.Meshs)
             {

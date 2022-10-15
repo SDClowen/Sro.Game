@@ -861,7 +861,7 @@ namespace Silkroad
             SurfaceFormat surfaceFormat = SurfaceFormatFromLoadFormat(loadSurfaceFormat, compressionFormat, pixelFlags, rgbBitCount);
 
             Texture2D tx = new Texture2D(device, width, height, hasMipMaps, surfaceFormat);
-
+            
             if (tx.Format != surfaceFormat)
             {
                 throw new Exception("Can't generate a " + surfaceFormat.ToString() + " surface.");
@@ -893,7 +893,7 @@ namespace Silkroad
                 throw new Exception("Can't read from a null stream");
             }
 
-            BinaryReader reader = new BinaryReader(stream);
+            using var reader = new BinaryReader(stream);
 
             if (streamOffset > reader.BaseStream.Length)
             {

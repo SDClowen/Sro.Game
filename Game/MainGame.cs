@@ -22,7 +22,8 @@ namespace Silkroad
 
         public static string Path = @"E:\Clients\SilkroadOnline_GlobalOfficial_v1_225";
         public AlphaTestEffect basicEffect;
-        public objifo objectInfos;
+        public ObjIfo ObjIfo;
+        public Tile2D Tile2D;
         protected SpriteBatch _spriteBatch;
 
         public MainGame()
@@ -54,9 +55,9 @@ namespace Silkroad
         protected override void Initialize()
         {
             IsMouseVisible = true;
-            objectInfos = new objifo();
-            objectInfos.Load();
-            basicEffect = new(this.GraphicsDevice);
+            ObjIfo = new();
+            Tile2D = new();
+            basicEffect = new(GraphicsDevice);
             Camera = new(this);
             _skyDome = new(this);
 
@@ -117,7 +118,7 @@ namespace Silkroad
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.DarkCyan, 1f, 0);
+            GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.Beige, 1f, 0);
 
             base.Draw(gameTime);
         }

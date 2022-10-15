@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Silkroad.Materials;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Silkroad.Components
 {
@@ -24,11 +25,14 @@ namespace Silkroad.Components
             var xSector = Terrain.XSector;
             var ySector = Terrain.YSector;
 
+
+            LoadTerrain(xSector, ySector); //CC
+
             //LoadTerrain(xSector - 1, ySector + 1); //TL
             //LoadTerrain(xSector, ySector + 1); //TC
             //LoadTerrain(xSector + 1, ySector + 1); //TR
             //LoadTerrain(xSector - 1, ySector); //CL
-            LoadTerrain(xSector, ySector); //CC
+            LoadObjects(xSector, ySector); //CC
             //LoadTerrain(xSector + 1, ySector); //CR
             //LoadTerrain(xSector - 1, ySector - 1); //BL
             //LoadTerrain(xSector, ySector - 1); //BC
@@ -75,6 +79,44 @@ namespace Silkroad.Components
         }
 
         private bool LoadTerrain(int xsec, int ysec)
+        {
+            mapObjects = new List<MapObject>();
+
+            var buffer = Program.Map.GetFileBuffer($@"{ysec}\{xsec}.m");
+            if (buffer == null)
+                return false;
+
+            var mfile = new MFile(buffer);
+            for (int y = 0; y < 6; y++)
+            {
+                for (int x = 0; x < 6; x++)
+                {
+                    var block = mfile.Blocks[y, x];
+
+                    for (int j = 0; j < 17; j++)
+                    {
+                        for (int k = 0; k < 17; k++)
+                        {
+                            var cell = block.Cells[j, k];
+
+                            var objs = Program.Window.Tile2D.Objs;
+                            var textureIndex = objs.FindIndex(p => p.Id == cell.Texture);
+                            if (textureIndex == -1)
+                                throw new System.Exception("Texture not found!");
+
+                            var texturePath = objs[textureIndex].Path;
+
+                            //var texture = DDS.GetTexture(Program.Data.GetFileBuffer(texturePath), Program.Window.GraphicsDevice);
+
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        private bool LoadObjects(int xsec, int ysec)
         {
             mapObjects = new List<MapObject>();
             //var navMesh = new nvm(Path.Combine("navmesh", $"nv_{ysec:X}{xsec:X}.nvm"));

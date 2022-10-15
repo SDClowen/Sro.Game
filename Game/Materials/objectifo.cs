@@ -4,51 +4,43 @@ using System.IO;
 
 namespace Silkroad.Materials
 {
-    public class objifo
+    public class ObjIfo
     {
-        private List<objinfo> objinfos = new List<objinfo>();
+        private List<objinfo> _list = new();
 
-        public objifo()
+        public ObjIfo()
         {
-            Load();
-        }
-
-        public void Load()
-        {
-            byte[] file = Program.Map.GetFileBuffer("object.ifo");
-            StreamReader reader = new StreamReader(new MemoryStream(file));
+            var file = Program.Map.GetFileBuffer("object.ifo");
+            using var reader = new StreamReader(new MemoryStream(file));
             reader.ReadLine();
             reader.ReadLine();
             while (!reader.EndOfStream)
             {
-                string line = reader.ReadLine();
-                var info = new objinfo();
-                info.id = int.Parse(line.Substring(0, 5));
-                info.param = line.Substring(6, 10);
-                info.path = line.Substring(18, line.Length - 19);
-                objinfos.Add(info);
+                var line = reader.ReadLine();
+                var obj = new objinfo();
+                if (!int.TryParse(line.AsSpan(0, 5), out obj.Id))
+                    throw new FileLoadException();
+
+                obj.IsSomething = line[6..16] == "0x00000001";
+                obj.Path = line[18..^1];
+                _list.Add(obj);
             }
-            reader.Close();
         }
 
         public string GetPathByID(int id)
         {
-            objinfo info = objinfos.Find(t => t.id == id);
+            var info = _list.Find(t => t.Id == id);
             if (info != null)
-            {
-                return info.path;
-            }
+                return info.Path;
             else
-            {
                 throw new Exception("Unknown objID");
-            }
         }
 
         public class objinfo
         {
-            public int id;
-            public string param;
-            public string path;
+            public int Id;
+            public bool IsSomething;
+            public string Path;
         }
     }
 }
