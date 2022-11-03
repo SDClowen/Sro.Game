@@ -55,25 +55,29 @@ namespace Silkroad.Materials
                 vert = new VertexPositionNormalTexture[vertCount];
                 for (int i = 0; i < vertCount; i++)
                 {
-                    verticies[i] = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    uv[i] = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    textures[i] = new Vector2(reader.ReadSingle(), reader.ReadSingle());
+                    verticies[i] = reader.ReadVector3();
+                    uv[i] = reader.ReadVector3();
+                    textures[i] = reader.ReadVector2();
                     if (lightmapResolution > 0)
                     {
-                        Vector2 unk12 = new Vector2(reader.ReadSingle(), reader.ReadSingle());
+                        Vector2 unk12 = reader.ReadVector2();
                     }
+
                     vert[i] = new VertexPositionNormalTexture(verticies[i], uv[i], textures[i]);
                     reader.BaseStream.Position += 12;
                 }
+
                 if (lightmapResolution > 0)
                 {
-                    string lightmap = new string(reader.ReadChars(reader.ReadInt32()));
+                    var lightmap = reader.ReadStringEx();
                 }
+
                 int boneCount = reader.ReadInt32();
                 for (int i = 0; i < boneCount; i++)
                 {
-                    string test = new string(reader.ReadChars(reader.ReadInt32()));
+                    var test = reader.ReadStringEx();
                 }
+
                 if (boneCount > 0)
                 {
                     reader.BaseStream.Position += vertCount * 6;
@@ -127,7 +131,7 @@ namespace Silkroad.Materials
                     }
                 }
 
-                return tmp.ToArray();
+                //return tmp.ToArray();
                 return _indicies;
             }
         }

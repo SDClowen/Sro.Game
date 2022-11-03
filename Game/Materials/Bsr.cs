@@ -149,11 +149,11 @@ namespace Silkroad.Materials
                 bsr.flagsUnkUInt4 = stream.ReadUInt32();
 
                 bsr.Type = stream.ReadUInt32();
-                bsr.Name = stream.ReadFixedSizeString();
+                bsr.Name = stream.ReadStringEx();
 
                 bsr.unkBuffer = stream.ReadBytes(48);
 
-                bsr.rootMesh = stream.ReadFixedSizeString();
+                bsr.rootMesh = stream.ReadStringEx();
 
                 bsr.BoundingBox0 = new float[6];
                 bsr.BoundingBox0[0] = stream.ReadSingle();
@@ -184,7 +184,7 @@ namespace Silkroad.Materials
                     bsr.Materials[i] = new Material
                     {
                         ID = stream.ReadUInt32(),
-                        Path = stream.ReadFixedSizeString()
+                        Path = stream.ReadStringEx()
                     };
                 }
 
@@ -195,7 +195,7 @@ namespace Silkroad.Materials
                 for (int i = 0; i < bsr.meshCount; i++)
                 {
                     var mesh = new Mesh();
-                    mesh.Path = stream.ReadFixedSizeString();
+                    mesh.Path = stream.ReadStringEx();
 
                     if (bsr.flagsUnkUInt0 == 1)
                         mesh.UnkUInt0 = stream.ReadUInt32();
@@ -212,7 +212,7 @@ namespace Silkroad.Materials
                 for (int i = 0; i < bsr.animationCount; i++)
                 {
                     var animation = new Animation();
-                    animation.Path = stream.ReadFixedSizeString();
+                    animation.Path = stream.ReadStringEx();
 
                     bsr.Animations[i] = animation;
                 }
@@ -223,7 +223,7 @@ namespace Silkroad.Materials
                 for (int i = 0; i < bsr.skeletonCount; i++)
                 {
                     var skeleton = new Skeleton();
-                    skeleton.Path = stream.ReadFixedSizeString();
+                    skeleton.Path = stream.ReadStringEx();
                     skeleton.extraByteCount = stream.ReadUInt32();
                     skeleton.ExtraBytes = stream.ReadBytes((int)skeleton.extraByteCount);
 
@@ -236,7 +236,7 @@ namespace Silkroad.Materials
                 for (int i = 0; i < bsr.meshGroupCount; i++)
                 {
                     var meshGroup = new MeshGroup();
-                    meshGroup.Name = stream.ReadFixedSizeString();
+                    meshGroup.Name = stream.ReadStringEx();
                     
                     var fileCount = stream.ReadUInt32();
                     meshGroup.FileIndex = new uint[fileCount];
