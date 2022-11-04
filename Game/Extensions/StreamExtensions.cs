@@ -17,15 +17,7 @@ namespace Silkroad
             if (size == 0)
                 size = reader.ReadInt32();
 
-            var buffer = reader.ReadBytes(size);
-            int idx;
-            for (idx = 0; idx < buffer.Length; idx++)
-            {
-                if (buffer[idx] == 0) 
-                    break;
-            }
-
-            return Encoding.UTF8.GetString(buffer, 0, idx);
+            return Encoding.UTF8.GetString(reader.ReadBytes(size));
         }
 
         /// <summary>

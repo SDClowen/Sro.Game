@@ -39,6 +39,18 @@ namespace Silkroad.Materials
                             RegionX = reader.ReadByte(),
                             RegionY = reader.ReadByte()
                         };
+                        float num2;
+                        for (num2 = obj.Theta; num2 < 0f; num2 += 6.2831855f)
+                        {
+                        }
+                        while (num2 > 6.2831855f)
+                        {
+                            num2 -= 6.2831855f;
+                        }
+                        //obj.Theta = num2;
+
+                        if (obj.Theta != num2)
+                            System.Diagnostics.Debug.WriteLine("aha");
 
                         obj.Position.X += (obj.RegionX - Terrain.XSector) * 1920;
                         obj.Position.Z += (obj.RegionY - Terrain.YSector) * 1920;

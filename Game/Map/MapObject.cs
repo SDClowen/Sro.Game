@@ -103,13 +103,12 @@ namespace Silkroad
                 {
                     pass.Apply();
 
-                    var indicies = m.Mesh.Indicies;
                     game.GraphicsDevice.DrawUserIndexedPrimitives(
                         PrimitiveType.TriangleList, 
                         m.Mesh.Verticies, 0, 
                         m.Mesh.Verticies.Length,
-                        indicies, 0,
-                        indicies.Length / 3);
+                        m.Mesh.Indicies, 0,
+                        m.Mesh.Indicies.Length / 3);
                 }
             }
         }
