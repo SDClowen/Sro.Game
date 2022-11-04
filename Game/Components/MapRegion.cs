@@ -92,13 +92,13 @@ namespace Silkroad.Components
                 for (int x = 0; x < 6; x++)
                 {
                     var block = mfile.Blocks[y, x];
-
+                    
                     for (int j = 0; j < 17; j++)
                     {
                         for (int k = 0; k < 17; k++)
                         {
                             var cell = block.Cells[j, k];
-
+                            
                             var objs = Program.Window.Tile2D.Objs;
                             var textureIndex = objs.FindIndex(p => p.Id == cell.Texture);
                             if (textureIndex == -1)
@@ -106,7 +106,11 @@ namespace Silkroad.Components
 
                             var texturePath = objs[textureIndex].Path;
 
-                            //var texture = DDS.GetTexture(Program.Data.GetFileBuffer(texturePath), Program.Window.GraphicsDevice);
+                            var fileBuffer = Program.Map.GetFileBuffer(Path.Combine("tile2d", texturePath));
+                            if (fileBuffer == null)
+                                continue;
+
+                            //var texture = DDS.GetTexture(fileBuffer, Program.Window.GraphicsDevice);
 
                         }
                     }
