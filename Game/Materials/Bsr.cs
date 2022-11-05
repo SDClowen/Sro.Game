@@ -154,7 +154,6 @@ namespace Silkroad.Materials
                 bsr.unkBuffer = stream.ReadBytes(48);
 
                 bsr.rootMesh = stream.ReadStringEx();
-
                 bsr.BoundingBox0 = new float[6];
                 bsr.BoundingBox0[0] = stream.ReadSingle();
                 bsr.BoundingBox0[1] = stream.ReadSingle();
@@ -194,8 +193,10 @@ namespace Silkroad.Materials
 
                 for (int i = 0; i < bsr.meshCount; i++)
                 {
-                    var mesh = new Mesh();
-                    mesh.Path = stream.ReadStringEx();
+                    var mesh = new Mesh
+                    {
+                        Path = stream.ReadStringEx()
+                    };
 
                     if (bsr.flagsUnkUInt0 == 1)
                         mesh.UnkUInt0 = stream.ReadUInt32();

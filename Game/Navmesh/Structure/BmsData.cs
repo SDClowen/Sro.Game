@@ -30,7 +30,8 @@ namespace Silkroad.Navmesh.Structure
                         Path = path
                     };
 
-                    var magicNumbers = reader.ReadStringEx(12);
+                    var header = reader.ReadStringEx(12);
+
                     var verticesPointer = reader.ReadInt32();
                     var bonesPointer = reader.ReadInt32();
                     var facesPointer = reader.ReadInt32();

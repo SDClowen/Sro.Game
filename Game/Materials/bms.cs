@@ -1,26 +1,24 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using Accessibility;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static System.Net.WebRequestMethods;
+using System;
+using System.IO;
 
 namespace Silkroad.Materials
 {
     internal class bms
     {
-        private Vector3[] verticies;
-        private Vector3[] uv;
-        private Vector2[] textures;
-        public string mesh;
-        public string material;
-        private VertexPositionTexture[] vert;
+        private Vector3[] _vertices;
+        private Vector3[] _normals;
+        private Vector2[] _textures;
+        public string MeshName;
+        public string MaterialName;
+        private VertexPositionNormalTexture[] _vertexPositionTexture;
         private string ModelName;
 
         public short[,] faces = null;
         private int[] _indicies = null;
 
-        public VertexPositionTexture[] Verticies => vert;
+        public VertexPositionNormalTexture[] Verticies => _vertexPositionTexture;
 
         public int[] Indicies => _indicies;
 
@@ -53,28 +51,30 @@ namespace Silkroad.Materials
             int test13 = reader.ReadInt32();
             int lightmapResolution = reader.ReadInt32();
             int test15 = reader.ReadInt32();
-            mesh = reader.ReadStringEx();
-            material = reader.ReadStringEx();
+
+            MeshName = reader.ReadStringEx();
+            MaterialName = reader.ReadStringEx();
             int unk = reader.ReadInt32();
 
-            var verticieCount = reader.ReadInt32();
+            var vertexCount = reader.ReadInt32();
 
-            verticies = new Vector3[verticieCount];
-            uv = new Vector3[verticieCount];
-            textures = new Vector2[verticieCount];
-            vert = new VertexPositionTexture[verticieCount];
+            _vertices = new Vector3[vertexCount];
+            _normals = new Vector3[vertexCount];
+            _textures = new Vector2[vertexCount];
+            _vertexPositionTexture = new VertexPositionNormalTexture[vertexCount];
 
-            for (int i = 0; i < verticieCount; i++)
+            for (int i = 0; i < vertexCount; i++)
             {
-                verticies[i] = reader.ReadVector3();
-                uv[i] = reader.ReadVector3();
-                textures[i] = reader.ReadVector2();
+                _vertices[i] = reader.ReadVector3();
+                _normals[i] = reader.ReadVector3();
+                _textures[i] = reader.ReadVector2();
+                _vertexPositionTexture[i] = new(_vertices[i], _normals[i], _textures[i]);
+                
                 if (lightmapResolution > 0)
                 {
                     Vector2 unk12 = reader.ReadVector2();
                 }
 
-                vert[i] = new VertexPositionTexture(verticies[i], textures[i]);
                 reader.BaseStream.Position += 12;
             }
 
@@ -91,11 +91,11 @@ namespace Silkroad.Materials
 
             if (boneCount > 0)
             {
-                reader.BaseStream.Position += verticieCount * 6;
+                reader.BaseStream.Position += vertexCount * 6;
             }
 
-            var indicieCount = reader.ReadInt32();
-            _indicies = new int[indicieCount * 3];
+            var indiceCount = reader.ReadInt32();
+            _indicies = new int[indiceCount * 3];
             for (int i = 0; i < _indicies.Length; i+=3)
             {
                 _indicies[i] = reader.ReadInt16();
