@@ -56,7 +56,7 @@ namespace Silkroad
 
             foreach (bms b in meshes)
             {
-                meshWithTextures.Add(new objMeshes(b, GetTexture(b.material)));
+                meshWithTextures.Add(new objMeshes(b, GetTexture(b.MaterialName)));
             }
         }
 
@@ -83,10 +83,10 @@ namespace Silkroad
 
         public void Draw(MainGame game)
         {
-            var basicEffect = game.basicEffect;
+            var effect = game.basicEffect;
             //basicEffect.TextureEnabled = true;
-            basicEffect.View = Camera.View;
-            basicEffect.Projection = Camera.Projection;
+            effect.View = Camera.View;
+            effect.Projection = Camera.Projection;
             //basicEffect.LightingEnabled = true;
             //basicEffect.PreferPerPixelLighting = true;
             //basicEffect.EnableDefaultLighting();
@@ -96,10 +96,10 @@ namespace Silkroad
             {
                 /*var anglePi = new SharpDX.AngleSingle(obj.angle, SharpDX.AngleType.Radian);
                 effect.World = Matrix.CreateRotationY(anglePi.Radians) * Matrix.CreateTranslation(obj.Position);*/
-                basicEffect.World = Matrix.CreateRotationY(obj.Theta) * Matrix.CreateTranslation(obj.Position);
-                basicEffect.Texture = m.texture; 
+                effect.World = Matrix.CreateRotationY(obj.Theta) * Matrix.CreateTranslation(obj.Position);
+                effect.Texture = m.texture;
 
-                foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
+                foreach (EffectPass pass in effect.CurrentTechnique.Passes)
                 {
                     pass.Apply();
 

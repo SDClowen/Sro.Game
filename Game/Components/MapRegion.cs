@@ -69,7 +69,8 @@ namespace Silkroad.Components
             var game = Game as MainGame;
             GraphicsDevice.BlendState = BlendState.Opaque;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-            GraphicsDevice.SamplerStates[0] = SamplerState.PointWrap;
+
+            GraphicsDevice.SamplerStates[0] = SamplerState.AnisotropicWrap;
             GraphicsDevice.RasterizerState = RasterizerState.CullNone;
 
             foreach (MapObject obj in mapObjects)

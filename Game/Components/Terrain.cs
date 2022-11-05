@@ -139,7 +139,7 @@ namespace Silkroad.Components
             //effect.EnableDefaultLighting();
 
             var rs = new RasterizerState();
-            rs.CullMode = CullMode.CullClockwiseFace;
+            rs.CullMode = CullMode.None;
             rs.FillMode = FillMode.WireFrame;
             GraphicsDevice.RasterizerState = rs;
 
