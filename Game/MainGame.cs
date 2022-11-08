@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Silkroad.Components;
+using Silkroad.Imgui;
 using Silkroad.Materials;
 using System;
 
@@ -25,6 +26,9 @@ namespace Silkroad
         public ObjIfo ObjIfo;
         public Tile2D Tile2D;
         protected SpriteBatch _spriteBatch;
+
+
+        private ImGuiRenderer _imGuiRenderer;
 
         public MainGame()
         {
@@ -55,22 +59,22 @@ namespace Silkroad
         protected override void Initialize()
         {
             IsMouseVisible = true;
+            _imGuiRenderer = new(this);
             ObjIfo = new();
             Tile2D = new();
             basicEffect = new(GraphicsDevice);
             Camera = new(this);
             _skyDome = new(this);
+            _stats = new(this, Content);
 
             // TODO: Add your initialization logic here
             _terrain = new(this);
             _mapRegion = new(this);
-
+           
             Components.Add(Camera);
             Components.Add(_terrain);
             Components.Add(_skyDome);
             Components.Add(_mapRegion);
-
-            _stats = new Statistics(this, Content);
             Components.Add(_stats);
 
             base.Initialize();
@@ -118,9 +122,13 @@ namespace Silkroad
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.Beige, 1f, 0);
-
+            GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.White, 1f, 0);
             base.Draw(gameTime);
+
+            _imGuiRenderer.BeforeLayout(gameTime);
+            _imGuiRenderer.InitLayout();
+            _imGuiRenderer.AfterLayout();
+
         }
     }
 }

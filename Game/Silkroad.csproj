@@ -19,6 +19,7 @@
     <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="ImGui.NET" Version="1.88.0" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />
   </ItemGroup>
