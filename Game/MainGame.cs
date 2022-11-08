@@ -36,7 +36,7 @@ namespace Silkroad
             graphics.HardwareModeSwitch = true;
             graphics.PreferMultiSampling = false;
             graphics.PreferredBackBufferWidth = 1600;
-            graphics.PreferredBackBufferWidth = 900;
+            graphics.PreferredBackBufferHeight = 900;
             graphics.GraphicsProfile = GraphicsProfile.HiDef;
 
             graphics.SynchronizeWithVerticalRetrace = true;
