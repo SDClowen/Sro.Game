@@ -1,4 +1,5 @@
 ﻿using System;
+using ImGuiNET;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -19,7 +20,7 @@ namespace Silkroad.Components
         protected const float m_pitchLimit = 1.4f;
 
         protected const float m_nearPlaneDistance = 1f;
-        protected const float m_farPlaneDistance = 10000f;
+        protected const float m_farPlaneDistance = 50000f;
 
         protected const float m_speed = 12.25f;
         protected const float m_wheelSpeed = 50f;
@@ -69,6 +70,9 @@ namespace Silkroad.Components
         /// </summary>
         protected virtual void ProcessInput()
         {
+            if (ImGui.IsWindowHovered())
+                return;
+
             var mouse = Mouse.GetState();
             var keyboard = Keyboard.GetState();
 
@@ -89,6 +93,12 @@ namespace Silkroad.Components
 
             if (keyboard.IsKeyDown(Keys.Space))
                 Position += m_up * m_speed;
+
+            if (keyboard.IsKeyDown(Keys.Q))
+                m_direction = Vector3.Transform(m_direction, m_rotation);
+
+            if (keyboard.IsKeyDown(Keys.E))
+                m_up = Vector3.Transform(m_up, m_rotation);
 
             if (keyboard.IsKeyDown(Keys.LeftControl) || keyboard.IsKeyDown(Keys.X))
                 Position -= m_up * m_speed;
@@ -126,10 +136,8 @@ namespace Silkroad.Components
                 m_direction = Vector3.Transform(m_direction, m_rotation);
 
                 // Up vector should stay constant unless we're doing flying or vehicles
-                //m_up = Vector3.Transform(m_up, m_rotation);
+                m_up = Vector3.Transform(m_up, m_rotation);
 
-                // Reset the position of the cursor to the center
-                //Mouse.SetPosition(m_windowWidth / 2, m_windowHeight / 2);
                 m_prevMouse = Mouse.GetState();
             }
 
@@ -187,7 +195,7 @@ namespace Silkroad.Components
         /// </summary>
         public float Yaw
         {
-            get { return (float)(Math.PI - Math.Atan2(m_direction.X, m_direction.Z)); }
+            get { return MathF.PI - MathF.Atan2(m_direction.X, m_direction.Z); }
         }
 
 
@@ -196,7 +204,7 @@ namespace Silkroad.Components
         /// </summary>
         public float Pitch
         {
-            get { return (float)Math.Asin(m_direction.Y); }
+            get { return MathF.Asin(m_direction.Y); }
         }
 
 

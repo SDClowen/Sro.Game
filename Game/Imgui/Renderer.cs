@@ -75,7 +75,7 @@ public class ImGuiRenderer
         var io = ImGui.GetIO();
         //io.Fonts.AddFontDefault();
 
-        var font = io.Fonts.AddFontFromFileTTF("C:\\Windows\\Fonts\\segoeui.ttf", 10);
+        var font = io.Fonts.AddFontFromFileTTF("C:\\Windows\\Fonts\\segoeui.ttf", 17);
         io.Fonts.Build();
 
         io.Fonts.GetTexDataAsRGBA32(out byte* pixelData, out int width, out int height, out int bytesPerPixel);
@@ -137,15 +137,7 @@ public class ImGuiRenderer
     /// </summary>
     public virtual void InitLayout()
     {
-        ImGui.ShowAboutWindow();
-        ImGui.ShowDebugLogWindow();
         ImGui.ShowDemoWindow();
-        ImGui.ShowFontSelector("Font Selector");
-        ImGui.ShowMetricsWindow();
-        ImGui.ShowStackToolWindow();
-        ImGui.ShowStyleEditor();
-        ImGui.ShowStyleSelector("Style Selector");
-        ImGui.ShowUserGuide();
     }
 
     /// <summary>
