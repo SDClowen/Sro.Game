@@ -94,12 +94,6 @@ namespace Silkroad.Components
             if (keyboard.IsKeyDown(Keys.Space))
                 Position += m_up * m_speed;
 
-            if (keyboard.IsKeyDown(Keys.Q))
-                m_direction = Vector3.Transform(m_direction, m_rotation);
-
-            if (keyboard.IsKeyDown(Keys.E))
-                m_up = Vector3.Transform(m_up, m_rotation);
-
             if (keyboard.IsKeyDown(Keys.LeftControl) || keyboard.IsKeyDown(Keys.X))
                 Position -= m_up * m_speed;
 
@@ -136,7 +130,7 @@ namespace Silkroad.Components
                 m_direction = Vector3.Transform(m_direction, m_rotation);
 
                 // Up vector should stay constant unless we're doing flying or vehicles
-                m_up = Vector3.Transform(m_up, m_rotation);
+                //m_up = Vector3.Transform(m_up, m_rotation);
 
                 m_prevMouse = Mouse.GetState();
             }
