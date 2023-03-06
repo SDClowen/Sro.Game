@@ -11,7 +11,7 @@ namespace Silkroad.Components
     /// </summary>
     public class Camera : GameComponent
     {
-        public static Vector3 Position = new Vector3(1000, 300, 200);
+        public static Vector3 Position = new(1000, 300, 200);
         protected Vector3 m_up = Vector3.Up;
         protected Vector3 m_direction;
 
