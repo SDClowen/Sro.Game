@@ -21,7 +21,7 @@ namespace Silkroad
         Terrain _terrain;
         MapRegion _mapRegion;
 
-        public static string Path = @"D:\Silkroad\Clients\SilkroadOnline_GlobalOfficial_v1_225";
+        public static string Path = @"C:\Program Files (x86)\Silkroad";
         public AlphaTestEffect basicEffect;
         public ObjIfo ObjIfo;
         public Tile2D Tile2D;
@@ -122,7 +122,7 @@ namespace Silkroad
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.White, 1f, 0);
+            GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.SkyBlue, 1f, 0);
             base.Draw(gameTime);
 
             _imGuiRenderer.BeforeLayout(gameTime);

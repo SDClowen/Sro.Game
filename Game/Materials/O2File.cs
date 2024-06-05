@@ -22,12 +22,7 @@ namespace Silkroad.Materials
                         var obj = new O2FileElement
                         {
                             Index = reader.ReadInt32(),
-                            Position = new Vector3
-                            (
-                                reader.ReadSingle(),
-                                reader.ReadSingle(),
-                                reader.ReadSingle()
-                            ),
+                            Position = reader.ReadVector3(),
 
                             UnknownFlag1 = reader.ReadUInt16(),
 
@@ -54,7 +49,6 @@ namespace Silkroad.Materials
 
                         obj.Position.X += (obj.RegionX - Terrain.XSector) * 1920;
                         obj.Position.Z += (obj.RegionY - Terrain.YSector) * 1920;
-
                         Elements.Add(obj);
                     }
                 }

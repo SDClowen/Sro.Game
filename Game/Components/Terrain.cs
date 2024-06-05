@@ -72,7 +72,7 @@ namespace Silkroad.Components
             objs.Add(obj);*/
 
             LoadTerrain(xSector, ySector, out obj); //CC
-            obj.world = Matrix.CreateWorld(Vector3.Zero, Vector3.Forward, Vector3.Up);
+            obj.world = Matrix.CreateWorld(Vector3.Zero, Vector3.Forward, Vector3.Down);
             objs.Add(obj);
             /*
             LoadTerrain(xSector + 1, ySector, out obj); //CR
@@ -136,7 +136,6 @@ namespace Silkroad.Components
             rs.CullMode = CullMode.None;
             rs.FillMode = FillMode.WireFrame;
             GraphicsDevice.RasterizerState = rs;
-
             foreach (var obj in objs)
             {
                 effect.World = obj.world;
@@ -145,10 +144,7 @@ namespace Silkroad.Components
                     pass.Apply();
                     GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, obj.vertices, 0, obj.vertices.Length, obj.indicies, 0, obj.indicies.Length / 3);
                 }
-            }
-            
-            //effect.World = Matrix.CreateWorld(Vector3.Zero, Vector3.Forward, Vector3.Up);
-
+            } 
             base.Draw(gameTime);
         }
     }
