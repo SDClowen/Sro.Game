@@ -94,8 +94,7 @@ namespace Silkroad
 
             foreach (objMeshes m in meshWithTextures)
             {
-                effect.World = Matrix.CreateRotationY(obj.Theta)  * Matrix.CreateWorld(obj.Position, Vector3.Forward, Vector3.Down);
-                //effect.World = Matrix.CreateRotationY(obj.Theta) * Matrix.CreateTranslation(obj.Position);
+                effect.World = Matrix.CreateRotationY(obj.Theta) * Matrix.CreateTranslation(obj.Position);
                 
                 effect.Texture = m.texture;
 
