@@ -126,12 +126,9 @@ namespace Silkroad.Components
             mapObjects = new List<MapObject>();
             //var navMesh = new nvm(Path.Combine("navmesh", $"nv_{ysec:X}{xsec:X}.nvm"));
 
-            var buffer = Program.Map.GetFileBuffer($@"{ysec}\{xsec}.o2");
-            if (buffer == null)
-                return false;
 
-            var ofile = new O2File(buffer);
-            foreach (O2FileElement obj in ofile.Elements)
+            var ofile = new O2File(xsec, ysec);
+            foreach (var obj in ofile.Elements)
             {
                 //igrone since .cpd..
                 if (obj.Index == 923)

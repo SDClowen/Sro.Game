@@ -120,7 +120,7 @@ namespace Silkroad.Components
             foreach (KeyValuePair<string, string> stat in m_statistics)
             {
                 m_spriteBatch.DrawString(m_font, string.Format("{0}: {1}", stat.Key, stat.Value), new Vector2(m_position.X + 1, m_position.Y + m_font.LineSpacing * line + 1), Color.Black, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
-                m_spriteBatch.DrawString(m_font, string.Format("{0}: {1}", stat.Key, stat.Value), new Vector2(m_position.X, m_position.Y + m_font.LineSpacing * line), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
+                m_spriteBatch.DrawString(m_font, string.Format("{0}: {1}", stat.Key, stat.Value), new Vector2(m_position.X, m_position.Y + m_font.LineSpacing * line), Color.Yellow, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
                 line++;
             }
             m_spriteBatch.End();

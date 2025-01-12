@@ -27,7 +27,7 @@ namespace Silkroad
         /// <returns></returns>
         public static Vector3 ReadVector3(this BinaryReader reader)
         {
-            return new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            return new Vector3(reader.ReadSingle() , reader.ReadSingle() * -1, reader.ReadSingle());
         }
 
         /// <summary>

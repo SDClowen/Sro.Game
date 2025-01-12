@@ -21,7 +21,7 @@ namespace Silkroad
         Terrain _terrain;
         MapRegion _mapRegion;
 
-        public static string Path = @"C:\Program Files (x86)\Silkroad";
+        public static string Path = @"E:\Silkroad\Clients\SilkroadOnline_GlobalOfficial_v1_225";
         public AlphaTestEffect basicEffect;
         public ObjIfo ObjIfo;
         public Tile2D Tile2D;

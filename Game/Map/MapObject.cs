@@ -42,7 +42,7 @@ namespace Silkroad
             resourceInfo = Bsr.ReadFromStream(Program.Data.GetFileBuffer(path));
             foreach (var mesh in resourceInfo.Meshs)
             {
-                meshes.Add(new bms(resourceInfo.Name, Program.Data.GetFileBuffer(mesh.Path)));
+                meshes.Add(new(resourceInfo.Name, mesh.Path));
             }
 
             foreach (var material in resourceInfo.Materials)
@@ -94,9 +94,9 @@ namespace Silkroad
 
             foreach (objMeshes m in meshWithTextures)
             {
-                /*var anglePi = new SharpDX.AngleSingle(obj.angle, SharpDX.AngleType.Radian);
-                effect.World = Matrix.CreateRotationY(anglePi.Radians) * Matrix.CreateTranslation(obj.Position);*/
-                effect.World = Matrix.CreateRotationY(obj.Theta) * Matrix.CreateTranslation(obj.Position);
+                effect.World = Matrix.CreateRotationY(obj.Theta)  * Matrix.CreateWorld(obj.Position, Vector3.Forward, Vector3.Down);
+                //effect.World = Matrix.CreateRotationY(obj.Theta) * Matrix.CreateTranslation(obj.Position);
+                
                 effect.Texture = m.texture;
 
                 foreach (EffectPass pass in effect.CurrentTechnique.Passes)
